@@ -25,8 +25,9 @@ export const NavbarContainer = styled.div`
   width: 100%;
   padding: 0 20px;
   transition: ease-in-out 0.5s;
-  background-color: ${({ changeNavBg }) =>
-    changeNavBg ? "#444444" : "#00000050"}; ;
+  background-color: ${({ changeNavBg, showMenu }) =>
+    changeNavBg ? "#444444" : showMenu ? "#00000050" : "#3f51b5"};
+  box-shadow: ${({ showMenu }) => (!showMenu ? "1px 1px 3px #ccc" : "")};
 `;
 
 export const NavLogo = styled(LinkRouter)`
@@ -58,7 +59,8 @@ export const MobileIcon = styled.div`
     font-size: 1.8rem;
     cursor: pointer;
     color: #efefef;
-    display: ${({ isOpen }) => (isOpen ? "none" : "block")};
+    display: ${({ isOpen, showMenu }) =>
+      isOpen || !showMenu ? "none" : "block"};
   }
 `;
 
@@ -68,9 +70,10 @@ export const NavMenu = styled.ul`
   list-style: none;
   text-align: center;
   margin-right: 0px;
+  display: ${({ showMenu, logout }) => (showMenu || logout ? "" : "none")};
 
   @media screen and (max-width: 920px) {
-    display: none;
+    display: ${({ showMenu, logout }) => (logout && !showMenu ? "" : "none")};
   }
 `;
 
@@ -96,4 +99,12 @@ export const NavLinks = styled(LinkScroll)`
     color: yellow;
     border-bottom: 2px solid yellow;
   }
+`;
+
+export const LogoutBtn = styled.button`
+  background: none;
+  border: 0;
+  color: #efefef;
+  font-size: 1.5rem;
+  cursor: pointer;
 `;

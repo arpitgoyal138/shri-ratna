@@ -1,5 +1,4 @@
 import React from "react";
-// import Video from "../../assets/videos/video.mp4";
 import Image1 from "../../assets/images/slider1.jpg";
 import Image3 from "../../assets/images/zodiac-signs.jpg";
 import Image2 from "../../assets/images/slider3.jpg";
@@ -7,7 +6,6 @@ import Image2 from "../../assets/images/slider3.jpg";
 import { IntroSliderContainer, IntroBg } from "./IntroSliderElements";
 import { Carousel } from "react-responsive-carousel";
 import styles from "react-responsive-carousel/lib/styles/carousel.min.css";
-import styled from "styled-components";
 
 const legendStyle = {
   color: "#efefef",

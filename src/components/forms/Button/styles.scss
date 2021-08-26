@@ -1,0 +1,19 @@
+.btn {
+  display: block;
+  width: 100%;
+  font-size: 1.2rem;
+  line-height: 1;
+  font-weight: 300;
+  text-transform: uppercase;
+  color: #efefef;
+  background: #3f51b5;
+  padding: 10px 10px;
+  margin: 10px auto;
+  border: 0;
+  outline: none;
+  cursor: pointer;
+  transition: 0.3s;
+  &:hover {
+    background-color: #3949a2;
+  }
+}

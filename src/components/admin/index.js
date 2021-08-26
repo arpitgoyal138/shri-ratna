@@ -3,7 +3,7 @@ import { createTheme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
 import AdminNavbar from "./AdminNavbar";
 import AdminSidebar from "./AdminSidebar";
-import EmailPassSignIn from "../auth/EmailPassSignIn.js";
+import EmailPassSignIn from "../login/index.js";
 const theme = createTheme({
   typography: {
     fontFamily: [

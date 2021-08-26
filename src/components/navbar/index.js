@@ -1,5 +1,6 @@
 import React from "react";
-import { FaBars } from "react-icons/fa";
+import { FaBars, FaSignOutAlt } from "react-icons/fa";
+
 import {
   Nav,
   NavbarContainer,
@@ -8,23 +9,36 @@ import {
   NavMenu,
   NavItem,
   NavLinks,
+  LogoutBtn,
 } from "./NavbarElements";
 import { animateScroll as scroll } from "react-scroll";
+import { auth } from "../../firebase/utils";
+
 const toggleHome = () => {
   scroll.scrollToTop();
 };
-const Navbar = ({ changeNavBg, isOpen, toggle }) => {
+const Navbar = (props) => {
+  const { changeNavBg, isOpen, toggle, showMenu, currentUser } = props;
   return (
     <>
       <Nav>
-        <NavbarContainer changeNavBg={changeNavBg}>
+        <NavbarContainer changeNavBg={changeNavBg} showMenu={showMenu}>
           <NavLogo to="/" onClick={toggleHome}>
-            श्री रत्न भण्डार
+            {/* श्री रत्न भण्डार */}
           </NavLogo>
-          <MobileIcon isOpen={isOpen} onClick={toggle}>
+          <MobileIcon isOpen={isOpen} onClick={toggle} showMenu={showMenu}>
             <FaBars />
           </MobileIcon>
-          <NavMenu>
+          {currentUser && !showMenu && (
+            <NavMenu showMenu={false} logout={true}>
+              <NavItem>
+                <LogoutBtn onClick={() => auth.signOut()}>
+                  <FaSignOutAlt />
+                </LogoutBtn>
+              </NavItem>
+            </NavMenu>
+          )}
+          <NavMenu showMenu={showMenu}>
             <NavItem>
               <NavLinks
                 to="products"
@@ -79,5 +93,4 @@ const Navbar = ({ changeNavBg, isOpen, toggle }) => {
     </>
   );
 };
-
 export default Navbar;

@@ -25,10 +25,10 @@ export const ProductCard = styled.div`
   margin: 1vh;
   line-height: 1.5;
   box-shadow: 0px 1px 3px #ccc;
-  transition:0.3s ;
+  transition:0.1s ;
   &:hover {
-    transform: scale(1.05);
-    /* box-shadow: 0 0 3px #ccc; */
+    transform: scale(1.018);
+    box-shadow: 1px 1px 5px;
   }
 `;
 
