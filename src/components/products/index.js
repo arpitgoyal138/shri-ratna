@@ -13,14 +13,16 @@ import {
   ProductPrice,
 } from "./ProductElements";
 const Products = ({ heading }) => {
-  
   return (
     <ProductsContainer id="products">
       <ProductHeading>{heading}</ProductHeading>
       <ProductWrapper>
         {data.map((product, index) => {
           return (
-            <Link style={{color:"#444444", textDecoration:"none"}} to={`/products/${product.id}`}>
+            <Link
+              style={{ color: "#444444", textDecoration: "none" }}
+              to={`/products/${product.id}`}
+            >
               <ProductCard key={index}>
                 <ProductImg src={product.img} alt={product.alt} />
                 <ProductInfo>

@@ -30,20 +30,32 @@ const IntroSlider = () => {
           style={{ height: "100vh" }}
         >
           <div>
-            <img src={Image1} style={{ height: "100vh", objectFit: "cover" }} />
+            <img
+              src={Image1}
+              style={{ height: "100vh", objectFit: "cover" }}
+              alt="Stones, gems"
+            />
             <p className="legend" style={legendStyle}>
               राशि के नग-नगीने, रुद्राक्ष, चंदन, शंख एवं पूजन सामग्री आदि
             </p>
           </div>
           <div>
-            <img src={Image2} style={{ height: "100vh", objectFit: "cover" }} />
+            <img
+              src={Image2}
+              style={{ height: "100vh", objectFit: "cover" }}
+              alt="temples, idols, dresses"
+            />
             <p className="legend" style={legendStyle}>
               {/* विभिन्न प्रकार के  */}
               मंदिर, शिवलिंग, धातु की मूर्तियां व उन्के वस्त्र, आभूषण इत्यादि
             </p>
           </div>
           <div>
-            <img src={Image3} style={{ height: "100vh", objectFit: "cover" }} />
+            <img
+              src={Image3}
+              style={{ height: "100vh", objectFit: "cover" }}
+              alt="Kundali, Astrology"
+            />
             <p className="legend" style={legendStyle}>
               जन्म कुण्डली की विस्तार पूर्वक जानकारी व कुण्डली मिलान
             </p>

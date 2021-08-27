@@ -24,7 +24,7 @@ const Navbar = (props) => {
       <Nav>
         <NavbarContainer changeNavBg={changeNavBg} showMenu={showMenu}>
           <NavLogo to="/" onClick={toggleHome}>
-            {/* श्री रत्न भण्डार */}
+            श्री रत्न भण्डार
           </NavLogo>
           <MobileIcon isOpen={isOpen} onClick={toggle} showMenu={showMenu}>
             <FaBars />

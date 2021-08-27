@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import AboutUs from "../../components/aboutUs";
 import IntroSlider from "../../components/introSlider";
 import Products from "../../components/products";

@@ -38,7 +38,3 @@ export const handleUserProfile = async (userAuth, additionalData) => {
   }
   return userRef;
 };
-
-// export const signInWithEmailPassword = () => {
-//   auth.
-// }

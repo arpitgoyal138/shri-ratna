@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 
 export default class AdminHomepage extends Component {
-  constructor(props) {
-    super(props);
-  }
+  // constructor(props) {
+  //   super(props);
+  // }
   render() {
     const { currentUser } = this.props;
     return (

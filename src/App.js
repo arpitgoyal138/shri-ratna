@@ -5,7 +5,7 @@ import {
   Route,
   Redirect,
 } from "react-router-dom";
-import ProductDetails from "./pages/ProductDetails";
+import ProductDetail from "./pages/ProductDetail";
 import Login from "./pages/Login";
 import { auth, handleUserProfile } from "./firebase/utils";
 import React, { Component } from "react";
@@ -16,6 +16,7 @@ import HomePageLayout from "./layouts/HomePageLayout";
 import LoginPageLayout from "./layouts/LoginPageLayout";
 import ProductDetailPageLayout from "./layouts/ProductDetailPageLayout";
 import Registration from "./pages/Registration";
+import Recovery from "./pages/Recovery";
 
 const initialState = {
   currentUser: null,
@@ -90,7 +91,6 @@ class App extends Component {
               </HomePageLayout>
             )}
           />
-          {/* <Home /> */}
           <Route
             path="/login"
             render={() =>
@@ -111,7 +111,7 @@ class App extends Component {
             path="/products/:id"
             render={() => (
               <ProductDetailPageLayout>
-                <ProductDetails />
+                <ProductDetail />
               </ProductDetailPageLayout>
             )}
           />
@@ -148,27 +148,20 @@ class App extends Component {
               )
             }
           />
-          {/* <Admin /> */}
+          <Route
+            path="/recovery"
+            render={() => (
+              <LoginPageLayout
+                changeNavBg={false}
+                isOpen={false}
+                showMenu={false}
+              >
+                <Recovery />
+              </LoginPageLayout>
+            )}
+          />
         </Switch>
       </Router>
-
-      // <div className="App">
-      //   <header className="App-header">
-
-      //     <img src={logo} className="App-logo" alt="logo" />
-      //     <p>
-      //       Edit <code>src/App.js</code> and save to reload.
-      //     </p>
-      //     <a
-      //       className="App-link"
-      //       href="https://reactjs.org"
-      //       target="_blank"
-      //       rel="noopener noreferrer"
-      //     >
-      //       Learn React
-      //     </a>
-      //   </header>
-      // </div>
     );
   }
 }

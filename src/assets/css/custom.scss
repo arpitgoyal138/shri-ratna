@@ -1,0 +1,56 @@
+.err_list {
+  font-size: 1.3rem;
+  color: red;
+  list-style: none;
+  text-align: center;
+}
+
+.success_list {
+  font-size: 1.3rem;
+  color: darkgreen;
+  list-style: none;
+  text-align: center;
+}
+
+.social_btn {
+  display: block;
+  width: 100%;
+  font-size: 1.2rem;
+  line-height: 1;
+  padding: 10px 10px;
+  margin: 10px auto;
+  border: 0;
+  outline: none;
+  cursor: pointer;
+  background: #fff;
+  color: #3f51b5;
+  border: solid 1px;
+  font-weight: 400;
+  transition: 0.3s;
+  &:hover {
+    background-color: #fafafb;
+  }
+}
+
+.formWrap {
+  margin: 1rem auto 0;
+}
+.wrap {
+  width: 100%;
+  margin: 1rem auto;
+}
+.paper {
+  display: flex;
+  margin-top: 50px;
+  align-items: center;
+  flex-direction: column;
+}
+.avatar {
+  margin: 8px;
+  background-color: #3f51b5;
+}
+
+.children {
+  width: 100%;
+  margin: 1rem auto 0;
+}

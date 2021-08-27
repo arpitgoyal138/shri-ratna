@@ -12,8 +12,13 @@ const ProductDetail = ({ match }) => {
   };
   return (
     <>
-    <Sidebar isOpen={isOpen} toggle={toggle} />
-      <Navbar changeNavBg={false} isOpen={isOpen} toggle={toggle} showMenu={true} />
+      <Sidebar isOpen={isOpen} toggle={toggle} />
+      <Navbar
+        changeNavBg={false}
+        isOpen={isOpen}
+        toggle={toggle}
+        showMenu={true}
+      />
       <h1>Detail Page</h1>
       <h2>Product id: {match.params.id}</h2>
     </>
