@@ -1,6 +1,5 @@
 import React from "react";
 import { FaBars, FaSignOutAlt } from "react-icons/fa";
-
 import {
   Nav,
   NavbarContainer,
@@ -13,12 +12,36 @@ import {
 } from "./NavbarElements";
 import { animateScroll as scroll } from "react-scroll";
 import { auth } from "../../firebase/utils";
+import { connect } from "react-redux";
+import {
+  setIsMenuOpenAction,
+  setShowMenuAction,
+} from "../../redux/navbar/navbar.actions";
 
 const toggleHome = () => {
   scroll.scrollToTop();
 };
+
 const Navbar = (props) => {
-  const { changeNavBg, isOpen, toggle, showMenu, currentUser } = props;
+  const {
+    setIsMenuOpen,
+    setShowMenu,
+    changeNavBg,
+    isMenuOpen,
+    showMenu,
+    currentUser,
+  } = props;
+  const page = props.children.type.name;
+  const pagesWithoutMenu = ["Login", "Recovery", "Admin", "Registration"];
+  console.log("page:", page);
+  if (pagesWithoutMenu.includes(page)) {
+    console.log("hide menu");
+    setIsMenuOpen(false);
+    setShowMenu(false);
+  }
+  const toggleSidebar = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
   return (
     <>
       <Nav>
@@ -26,7 +49,11 @@ const Navbar = (props) => {
           <NavLogo to="/" onClick={toggleHome}>
             श्री रत्न भण्डार
           </NavLogo>
-          <MobileIcon isOpen={isOpen} onClick={toggle} showMenu={showMenu}>
+          <MobileIcon
+            isOpen={isMenuOpen}
+            onClick={toggleSidebar}
+            showMenu={showMenu}
+          >
             <FaBars />
           </MobileIcon>
           {currentUser && !showMenu && (
@@ -93,4 +120,15 @@ const Navbar = (props) => {
     </>
   );
 };
-export default Navbar;
+
+const mapStateToProps = ({ user, navbar }) => ({
+  currentUser: user.currentUser,
+  changeNavBg: navbar.changeNavBg,
+  isOpen: navbar.isOpen,
+  showMenu: navbar.showMenu,
+});
+const mapDispatchToProps = (dispatch) => ({
+  setIsMenuOpen: (navbar) => dispatch(setIsMenuOpenAction(navbar)),
+  setShowMenu: (navbar) => dispatch(setShowMenuAction(navbar)),
+});
+export default connect(mapStateToProps, mapDispatchToProps)(Navbar);

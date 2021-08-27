@@ -7,10 +7,19 @@ import {
   SidebarMenu,
   SidebarLink,
 } from "./SidebarElements";
-const Sidebar = ({ isOpen, toggle }) => {
+import { connect } from "react-redux";
+import { setIsMenuOpenAction } from "../../redux/navbar/navbar.actions";
+
+const Sidebar = (props) => {
+  console.log("sidebar props:", props);
+  const { setIsMenuOpen, isMenuOpen } = props;
+
+  const toggleSidebar = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
   return (
-    <SidebarContainer isOpen={isOpen} onClick={toggle}>
-      <Icon onClick={toggle}>
+    <SidebarContainer isOpen={isMenuOpen} onClick={toggleSidebar}>
+      <Icon onClick={toggleSidebar}>
         <CloseIcon />
       </Icon>
       <SidebarWrapper>
@@ -22,7 +31,7 @@ const Sidebar = ({ isOpen, toggle }) => {
             smooth={true}
             exact="true"
             offset={-80}
-            onClick={toggle}
+            onClick={toggleSidebar}
           >
             मंदिर, मूर्तियां व पूजा सामग्री आदि
           </SidebarLink>
@@ -31,7 +40,7 @@ const Sidebar = ({ isOpen, toggle }) => {
             smooth={true}
             exact="true"
             offset={-80}
-            onClick={toggle}
+            onClick={toggleSidebar}
           >
             ज्योतिष परामर्श
           </SidebarLink>
@@ -40,7 +49,7 @@ const Sidebar = ({ isOpen, toggle }) => {
             smooth={true}
             exact="true"
             offset={-80}
-            onClick={toggle}
+            onClick={toggleSidebar}
           >
             परिचय जानें
           </SidebarLink>
@@ -49,7 +58,7 @@ const Sidebar = ({ isOpen, toggle }) => {
             smooth={true}
             exact="true"
             offset={-80}
-            onClick={toggle}
+            onClick={toggleSidebar}
           >
             सम्पर्क करें
           </SidebarLink>
@@ -58,5 +67,10 @@ const Sidebar = ({ isOpen, toggle }) => {
     </SidebarContainer>
   );
 };
-
-export default Sidebar;
+const mapStateToProps = ({ navbar }) => ({
+  isMenuOpen: navbar.isMenuOpen,
+});
+const mapDispatchToProps = (dispatch) => ({
+  setIsMenuOpen: (navbar) => dispatch(setIsMenuOpenAction(navbar)),
+});
+export default connect(mapStateToProps, mapDispatchToProps)(Sidebar);

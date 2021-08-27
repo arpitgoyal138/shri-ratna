@@ -17,63 +17,47 @@ import LoginPageLayout from "./layouts/LoginPageLayout";
 import ProductDetailPageLayout from "./layouts/ProductDetailPageLayout";
 import Registration from "./pages/Registration";
 import Recovery from "./pages/Recovery";
+import { setCurrentUserAction } from "./redux/user/user.actions";
 
-const initialState = {
-  currentUser: null,
-  isOpen: false,
-  changeNavBg: false,
-  showMenu: true,
-};
+import { connect } from "react-redux";
+import {
+  setChangeBackgroundAction,
+  setIsMenuOpenAction,
+  setShowMenuAction,
+} from "./redux/navbar/navbar.actions";
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      ...initialState,
-    };
-  }
   changeNavBackground = () => {
+    const { setChangeNavBG, changeNavBg } = this.props;
+
     if (window.scrollY >= window.innerHeight - 280) {
-      this.setState({
-        changeNavBg: true,
-      });
+      if (!changeNavBg) setChangeNavBG(true);
     } else {
-      this.setState({
-        changeNavBg: false,
-      });
+      if (changeNavBg) setChangeNavBG(false);
     }
   };
-  toggleSidebar = () => {
-    this.setState({
-      isOpen: !this.state.isOpen,
-    });
-  };
+
   authListener = null;
 
   componentDidMount() {
+    const { setCurrentUser } = this.props;
     window.addEventListener("scroll", this.changeNavBackground);
     this.authListener = auth.onAuthStateChanged(async (userAuth) => {
       if (userAuth) {
         const userRef = await handleUserProfile(userAuth);
         userRef.onSnapshot((snapshot) => {
-          this.setState({
-            currentUser: {
-              uid: snapshot.id,
-              ...snapshot.data(),
-            },
-          });
+          setCurrentUser({ uid: snapshot.id, ...snapshot.data() });
         });
       }
-      this.setState({
-        currentUser: null,
-      });
+      setCurrentUser(userAuth);
     });
   }
   componentWillUnmount() {
     this.authListener();
   }
   render() {
-    const { currentUser } = this.state;
+    console.log("this.props:", this.props);
+    const { currentUser } = this.props;
     return (
       <Router>
         <Switch>
@@ -81,12 +65,7 @@ class App extends Component {
             path="/"
             exact
             render={() => (
-              <HomePageLayout
-                {...this.state}
-                // changeNavBg={CheckNavStyle.changeNavBg}
-                // isOpen={CheckNavStyle.isOpen}
-                // toggle={CheckNavStyle.toggle}
-              >
+              <HomePageLayout>
                 <Home />
               </HomePageLayout>
             )}
@@ -97,11 +76,7 @@ class App extends Component {
               currentUser ? (
                 <Redirect to="/admin" />
               ) : (
-                <LoginPageLayout
-                  changeNavBg={false}
-                  isOpen={false}
-                  showMenu={false}
-                >
+                <LoginPageLayout>
                   <Login />
                 </LoginPageLayout>
               )
@@ -121,13 +96,8 @@ class App extends Component {
               !currentUser ? (
                 <Redirect to="/login" />
               ) : (
-                <AdminPageLayout
-                  currentUser={currentUser}
-                  changeNavBg={false}
-                  isOpen={false}
-                  showMenu={false}
-                >
-                  <AdminHomepage currentUser={currentUser} />
+                <AdminPageLayout>
+                  <AdminHomepage />
                 </AdminPageLayout>
               )
             }
@@ -138,11 +108,7 @@ class App extends Component {
               currentUser ? (
                 <Redirect to="/admin" />
               ) : (
-                <LoginPageLayout
-                  changeNavBg={false}
-                  isOpen={false}
-                  showMenu={false}
-                >
+                <LoginPageLayout>
                   <Registration />
                 </LoginPageLayout>
               )
@@ -151,11 +117,7 @@ class App extends Component {
           <Route
             path="/recovery"
             render={() => (
-              <LoginPageLayout
-                changeNavBg={false}
-                isOpen={false}
-                showMenu={false}
-              >
+              <LoginPageLayout>
                 <Recovery />
               </LoginPageLayout>
             )}
@@ -165,4 +127,18 @@ class App extends Component {
     );
   }
 }
-export default App;
+
+const mapStateToProps = ({ user, navbar }) => ({
+  currentUser: user.currentUser,
+  changeNavBg: navbar.changeNavBg,
+  isMenuOpen: navbar.isMenuOpen,
+  showMenu: navbar.showMenu,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  setCurrentUser: (user) => dispatch(setCurrentUserAction(user)),
+  setChangeNavBG: (navbar) => dispatch(setChangeBackgroundAction(navbar)),
+  setIsMenuOpen: (navbar) => dispatch(setIsMenuOpenAction(navbar)),
+  setShowMenu: (navbar) => dispatch(setShowMenuAction(navbar)),
+});
+export default connect(mapStateToProps, mapDispatchToProps)(App);
