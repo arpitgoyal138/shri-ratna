@@ -16,6 +16,7 @@ import { connect } from "react-redux";
 import {
   setIsMenuOpenAction,
   setShowMenuAction,
+  setChangeBackgroundAction,
 } from "../../redux/navbar/navbar.actions";
 
 const toggleHome = () => {
@@ -30,6 +31,7 @@ const Navbar = (props) => {
     isMenuOpen,
     showMenu,
     currentUser,
+    setChangeNavBG,
   } = props;
   const page = props.children.type.name;
   const pagesWithoutMenu = ["Login", "Recovery", "Admin", "Registration"];
@@ -38,6 +40,9 @@ const Navbar = (props) => {
     console.log("hide menu");
     setIsMenuOpen(false);
     setShowMenu(false);
+  }
+  if (page === "ProductDetail") {
+    setChangeNavBG(true);
   }
   const toggleSidebar = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -130,5 +135,6 @@ const mapStateToProps = ({ user, navbar }) => ({
 const mapDispatchToProps = (dispatch) => ({
   setIsMenuOpen: (navbar) => dispatch(setIsMenuOpenAction(navbar)),
   setShowMenu: (navbar) => dispatch(setShowMenuAction(navbar)),
+  setChangeNavBG: (navbar) => dispatch(setChangeBackgroundAction(navbar)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Navbar);

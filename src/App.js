@@ -84,9 +84,9 @@ class App extends Component {
           />
           <Route
             path="/products/:id"
-            render={() => (
+            render={(props) => (
               <ProductDetailPageLayout>
-                <ProductDetail />
+                <ProductDetail {...props} />
               </ProductDetailPageLayout>
             )}
           />

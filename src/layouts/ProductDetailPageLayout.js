@@ -3,6 +3,7 @@ import Navbar from "../components/navbar";
 import Sidebar from "../components/sidebar";
 
 const ProductDetailPageLayout = (props) => {
+  console.log("ProductDetailPageLayout props:", props);
   return (
     <div className="fullHeight">
       <Navbar {...props} />
