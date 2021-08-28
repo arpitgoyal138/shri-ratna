@@ -8,7 +8,7 @@ import {
 import ProductDetail from "./pages/ProductDetail";
 import Login from "./pages/Login";
 import { auth, handleUserProfile } from "./firebase/utils";
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 import AdminHomepage from "./pages/Admin/Home";
 import Home from "./pages/Homepage";
 import AdminPageLayout from "./layouts/AdminPageLayout";
@@ -25,24 +25,15 @@ import {
   setIsMenuOpenAction,
   setShowMenuAction,
 } from "./redux/navbar/navbar.actions";
+import WithAuth from "./hoc/withAuth";
 
-class App extends Component {
-  changeNavBackground = () => {
-    const { setChangeNavBG, changeNavBg } = this.props;
+const App = (props) => {
+  console.log("App props:", props);
 
-    if (window.scrollY >= window.innerHeight - 280) {
-      if (!changeNavBg) setChangeNavBG(true);
-    } else {
-      if (changeNavBg) setChangeNavBG(false);
-    }
-  };
+  const { setCurrentUser, currentUser, setChangeNavBG, changeNavBg } = props;
 
-  authListener = null;
-
-  componentDidMount() {
-    const { setCurrentUser } = this.props;
-    window.addEventListener("scroll", this.changeNavBackground);
-    this.authListener = auth.onAuthStateChanged(async (userAuth) => {
+  useEffect(() => {
+    const authListener = auth.onAuthStateChanged(async (userAuth) => {
       if (userAuth) {
         const userRef = await handleUserProfile(userAuth);
         userRef.onSnapshot((snapshot) => {
@@ -51,82 +42,86 @@ class App extends Component {
       }
       setCurrentUser(userAuth);
     });
-  }
-  componentWillUnmount() {
-    this.authListener();
-  }
-  render() {
-    console.log("this.props:", this.props);
-    const { currentUser } = this.props;
-    return (
-      <Router>
-        <Switch>
-          <Route
-            path="/"
-            exact
-            render={() => (
-              <HomePageLayout>
-                <Home />
-              </HomePageLayout>
-            )}
-          />
-          <Route
-            path="/login"
-            render={() =>
-              currentUser ? (
-                <Redirect to="/admin" />
-              ) : (
-                <LoginPageLayout>
-                  <Login />
-                </LoginPageLayout>
-              )
-            }
-          />
-          <Route
-            path="/products/:id"
-            render={(props) => (
-              <ProductDetailPageLayout>
-                <ProductDetail {...props} />
-              </ProductDetailPageLayout>
-            )}
-          />
-          <Route
-            path="/admin"
-            render={() =>
-              !currentUser ? (
-                <Redirect to="/login" />
-              ) : (
-                <AdminPageLayout>
-                  <AdminHomepage />
-                </AdminPageLayout>
-              )
-            }
-          />
-          <Route
-            path="/register"
-            render={() =>
-              currentUser ? (
-                <Redirect to="/admin" />
-              ) : (
-                <LoginPageLayout>
-                  <Registration />
-                </LoginPageLayout>
-              )
-            }
-          />
-          <Route
-            path="/recovery"
-            render={() => (
+    return () => {
+      authListener();
+    };
+  }, []);
+
+  const changeNavBackground = () => {
+    if (window.scrollY >= window.innerHeight - 280) {
+      if (!changeNavBg) setChangeNavBG(true);
+    } else {
+      if (changeNavBg) setChangeNavBG(false);
+    }
+  };
+  window.addEventListener("scroll", changeNavBackground);
+
+  return (
+    <Router>
+      <Switch>
+        <Route
+          path="/"
+          exact
+          render={() => (
+            <HomePageLayout>
+              <Home />
+            </HomePageLayout>
+          )}
+        />
+        <Route
+          path="/login"
+          render={() =>
+            currentUser ? (
+              <Redirect to="/admin" />
+            ) : (
               <LoginPageLayout>
-                <Recovery />
+                <Login />
               </LoginPageLayout>
-            )}
-          />
-        </Switch>
-      </Router>
-    );
-  }
-}
+            )
+          }
+        />
+        <Route
+          path="/products/:id"
+          render={() => (
+            <ProductDetailPageLayout>
+              <ProductDetail {...props} />
+            </ProductDetailPageLayout>
+          )}
+        />
+        <Route
+          path="/admin"
+          render={() => (
+            <WithAuth>
+              <AdminPageLayout>
+                <AdminHomepage />
+              </AdminPageLayout>
+            </WithAuth>
+          )}
+        />
+        <Route
+          path="/register"
+          render={() =>
+            currentUser ? (
+              <Redirect to="/admin" />
+            ) : (
+              <LoginPageLayout>
+                <Registration />
+              </LoginPageLayout>
+            )
+          }
+        />
+        <Route
+          path="/recovery"
+          render={() => (
+            <LoginPageLayout>
+              <Recovery />
+            </LoginPageLayout>
+          )}
+        />
+      </Switch>
+    </Router>
+  );
+};
 
 const mapStateToProps = ({ user, navbar }) => ({
   currentUser: user.currentUser,

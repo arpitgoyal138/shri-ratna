@@ -8,8 +8,6 @@ const FormInput = ({ handleChange, label, ...otherProps }) => {
     <div>
       <CssBaseline />
 
-      {/* {label && <label>{label}</label>} */}
-
       {/* <input className="formInput" onChange={handleChange} {...otherProps} /> */}
       <TextField
         variant="outlined"

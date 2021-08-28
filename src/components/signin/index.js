@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
@@ -8,104 +8,91 @@ import Button from "../forms/Button";
 import FormInput from "../forms/FormInput";
 import "./../../assets/css/custom.scss";
 import AuthWrapper from "../authWrapper";
+import { withRouter } from "react-router-dom";
 
-const initialState = {
-  email: "",
-  password: "",
-  errors: [],
-};
+const Signin = (props) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
 
-export default class Login extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      ...initialState,
-    };
-  }
-  handleFormSubmit = async (e) => {
+  const resetForm = () => {
+    setEmail("");
+    setPassword("");
+    setMessage("");
+  };
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
-    const { email, password } = this.state;
     try {
       await auth.signInWithEmailAndPassword(email, password);
-      this.setState({
-        ...initialState,
-      });
+      resetForm();
+      props.history.push("/admin");
     } catch (err) {
-      this.setState({
-        errors: [err.message],
-      });
       console.log(err);
+      const errCode = err.code.substr(
+        err.code.indexOf("/") + 1,
+        err.code.length
+      );
+      if (errCode === "user-not-found") {
+        setMessage("No user found with this Email address.");
+      } else if (errCode === "wrong-password") {
+        setMessage(
+          'Please try again with correct password or use "Forgot Password" option.'
+        );
+      }
     }
   };
 
-  handleChange = (e) => {
-    const { name, value } = e.target;
-    this.setState({
-      [name]: value,
-    });
-  };
-  render() {
-    const { email, password, errors } = this.state;
-    return (
-      <AuthWrapper headline="Login">
-        <form onSubmit={this.handleFormSubmit}>
-          {errors.length > 0 && (
-            <ul>
-              {errors.map((err, index) => {
-                return (
-                  <li className="err_list" key={index}>
-                    {err}
-                  </li>
-                );
-              })}
-            </ul>
-          )}
-          <Button
-            type="button"
-            className="social_btn"
-            onClick={signInWithGoogle}
-          >
-            Sign in with Google
-          </Button>
+  return (
+    <AuthWrapper headline="Login">
+      <form onSubmit={handleFormSubmit}>
+        {message !== "" && (
+          <ul>
+            <li className="err_list">{message}</li>
+          </ul>
+        )}
+        <Button type="button" className="social_btn" onClick={signInWithGoogle}>
+          Sign in with Google
+        </Button>
 
-          <FormInput
-            label="Email"
-            autoComplete="email"
-            type="email"
-            name="email"
-            value={email}
-            onChange={this.handleChange}
-            autoFocus
-            required
-          />
-          <FormInput
-            label="Password"
-            autoComplete="password"
-            type="password"
-            name="password"
-            value={password}
-            onChange={this.handleChange}
-            required
-          />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
-          <Button type="submit">Log in</Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="/recovery" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="/register" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
+        <FormInput
+          label="Email"
+          autoComplete="email"
+          type="email"
+          name="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          autoFocus
+          required
+        />
+        <FormInput
+          label="Password"
+          autoComplete="password"
+          type="password"
+          name="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <FormControlLabel
+          control={<Checkbox value="remember" color="primary" />}
+          label="Remember me"
+        />
+        <Button type="submit">Log in</Button>
+        <Grid container>
+          <Grid item xs>
+            <Link href="/recovery" variant="body2">
+              Forgot password?
+            </Link>
           </Grid>
-        </form>
-      </AuthWrapper>
-    );
-  }
-}
+          <Grid item>
+            <Link href="/register" variant="body2">
+              {"Don't have an account? Sign Up"}
+            </Link>
+          </Grid>
+        </Grid>
+      </form>
+    </AuthWrapper>
+  );
+};
+
+export default withRouter(Signin);
