@@ -13,5 +13,6 @@ const ProductDetail = ({ match }) => {
     </>
   );
 };
+ProductDetail.displayName = "ProductDetail";
 
 export default ProductDetail;

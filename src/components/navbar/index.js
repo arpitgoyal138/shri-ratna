@@ -24,6 +24,7 @@ const toggleHome = () => {
 };
 
 const Navbar = (props) => {
+  console.log("Navbar props:", props);
   const {
     setIsMenuOpen,
     setShowMenu,
@@ -33,9 +34,14 @@ const Navbar = (props) => {
     currentUser,
     setChangeNavBG,
   } = props;
-  const page = props.children.type.name;
-  const pagesWithoutMenu = ["Login", "Recovery", "Admin", "Registration"];
-  console.log("page:", page);
+  const page = props.children.type.displayName;
+  console.log("child page:", page);
+  const pagesWithoutMenu = [
+    "Login",
+    "Recovery",
+    "AdminHomepage",
+    "Registration",
+  ];
   if (pagesWithoutMenu.includes(page)) {
     console.log("hide menu");
     setIsMenuOpen(false);

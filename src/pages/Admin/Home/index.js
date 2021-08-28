@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 
 export default class AdminHomepage extends Component {
+  static displayName = "AdminHomepage";
+
   render() {
     return (
       <div>
