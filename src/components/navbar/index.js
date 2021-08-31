@@ -1,5 +1,5 @@
 import React from "react";
-import { FaBars, FaSignOutAlt } from "react-icons/fa";
+import { FaBars, FaSignOutAlt, FaSignInAlt } from "react-icons/fa";
 import {
   Nav,
   NavbarContainer,
@@ -9,11 +9,13 @@ import {
   NavItem,
   NavLinks,
   LogoutBtn,
+  SignInBtn,
 } from "./NavbarElements";
 import { animateScroll as scroll } from "react-scroll";
 import { useSelector, useDispatch } from "react-redux";
 
 import { signOutUserStart } from "./../../redux/user/user.actions";
+import { useHistory } from "react-router-dom";
 const mapState = ({ user }) => ({
   currentUser: user.currentUser,
 });
@@ -24,9 +26,12 @@ const toggleHome = () => {
 const Navbar = (props) => {
   const { currentUser } = useSelector(mapState);
   const dispatch = useDispatch();
-
+  const history = useHistory();
   const signOut = () => {
-    dispatch(signOutUserStart);
+    dispatch(signOutUserStart());
+  };
+  const signIn = () => {
+    history.push("/login");
   };
   return (
     <>
@@ -46,12 +51,23 @@ const Navbar = (props) => {
             <NavMenu logout={true}>
               <NavItem>
                 <LogoutBtn onClick={() => signOut()}>
-                  <FaSignOutAlt />
+                  {/* <FaSignOutAlt /> */}
+                  Logout
                 </LogoutBtn>
               </NavItem>
             </NavMenu>
           )}
-          <NavMenu currentUser={currentUser}>
+          {!currentUser && (
+            <NavMenu>
+              <NavItem>
+                <SignInBtn onClick={() => signIn()}>
+                  {/* <FaSignInAlt /> */}
+                  Login
+                </SignInBtn>
+              </NavItem>
+            </NavMenu>
+          )}
+          {/* <NavMenu currentUser={currentUser}>
             <NavItem>
               <NavLinks
                 to="products"
@@ -100,7 +116,7 @@ const Navbar = (props) => {
                 सम्पर्क करें
               </NavLinks>
             </NavItem>
-          </NavMenu>
+          </NavMenu> */}
         </NavbarContainer>
       </Nav>
     </>

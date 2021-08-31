@@ -26,7 +26,7 @@ export const NavbarContainer = styled.div`
   padding: 0 20px;
   transition: ease-in-out 0.5s;
   background-color: ${({ currentUser }) =>
-    currentUser ? "#444444" : "#3f51b5"};
+    currentUser ? "#444444" : "#00000090"};
   box-shadow: ${({ currentUser }) => (!currentUser ? "1px 1px 3px #ccc" : "")};
 `;
 
@@ -101,6 +101,13 @@ export const NavLinks = styled(LinkScroll)`
 `;
 
 export const LogoutBtn = styled.button`
+  background: none;
+  border: 0;
+  color: #efefef;
+  font-size: 1.5rem;
+  cursor: pointer;
+`;
+export const SignInBtn = styled.button`
   background: none;
   border: 0;
   color: #efefef;
