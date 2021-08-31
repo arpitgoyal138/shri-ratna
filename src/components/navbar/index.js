@@ -11,72 +11,47 @@ import {
   LogoutBtn,
 } from "./NavbarElements";
 import { animateScroll as scroll } from "react-scroll";
-import { auth } from "../../firebase/utils";
-import { connect } from "react-redux";
-import {
-  setIsMenuOpenAction,
-  setShowMenuAction,
-  setChangeBackgroundAction,
-} from "../../redux/navbar/navbar.actions";
+import { useSelector, useDispatch } from "react-redux";
 
+import { signOutUserStart } from "./../../redux/user/user.actions";
+const mapState = ({ user }) => ({
+  currentUser: user.currentUser,
+});
 const toggleHome = () => {
   scroll.scrollToTop();
 };
 
 const Navbar = (props) => {
-  console.log("Navbar props:", props);
-  const {
-    setIsMenuOpen,
-    setShowMenu,
-    changeNavBg,
-    isMenuOpen,
-    showMenu,
-    currentUser,
-    setChangeNavBG,
-  } = props;
-  const page = props.children.type.displayName;
-  console.log("child page:", page);
-  const pagesWithoutMenu = [
-    "Login",
-    "Recovery",
-    "AdminHomepage",
-    "Registration",
-  ];
-  if (pagesWithoutMenu.includes(page)) {
-    console.log("hide menu");
-    setIsMenuOpen(false);
-    setShowMenu(false);
-  }
-  if (page === "ProductDetail") {
-    setChangeNavBG(true);
-  }
-  const toggleSidebar = () => {
-    setIsMenuOpen(!isMenuOpen);
+  const { currentUser } = useSelector(mapState);
+  const dispatch = useDispatch();
+
+  const signOut = () => {
+    dispatch(signOutUserStart);
   };
   return (
     <>
       <Nav>
-        <NavbarContainer changeNavBg={changeNavBg} showMenu={showMenu}>
+        <NavbarContainer currentUser={currentUser}>
           <NavLogo to="/" onClick={toggleHome}>
             श्री रत्न भण्डार
           </NavLogo>
-          <MobileIcon
+          {/* <MobileIcon
             isOpen={isMenuOpen}
             onClick={toggleSidebar}
             showMenu={showMenu}
           >
             <FaBars />
-          </MobileIcon>
-          {currentUser && !showMenu && (
-            <NavMenu showMenu={false} logout={true}>
+          </MobileIcon> */}
+          {currentUser && (
+            <NavMenu logout={true}>
               <NavItem>
-                <LogoutBtn onClick={() => auth.signOut()}>
+                <LogoutBtn onClick={() => signOut()}>
                   <FaSignOutAlt />
                 </LogoutBtn>
               </NavItem>
             </NavMenu>
           )}
-          <NavMenu showMenu={showMenu}>
+          <NavMenu currentUser={currentUser}>
             <NavItem>
               <NavLinks
                 to="products"
@@ -132,15 +107,4 @@ const Navbar = (props) => {
   );
 };
 
-const mapStateToProps = ({ user, navbar }) => ({
-  currentUser: user.currentUser,
-  changeNavBg: navbar.changeNavBg,
-  isOpen: navbar.isOpen,
-  showMenu: navbar.showMenu,
-});
-const mapDispatchToProps = (dispatch) => ({
-  setIsMenuOpen: (navbar) => dispatch(setIsMenuOpenAction(navbar)),
-  setShowMenu: (navbar) => dispatch(setShowMenuAction(navbar)),
-  setChangeNavBG: (navbar) => dispatch(setChangeBackgroundAction(navbar)),
-});
-export default connect(mapStateToProps, mapDispatchToProps)(Navbar);
+export default Navbar;

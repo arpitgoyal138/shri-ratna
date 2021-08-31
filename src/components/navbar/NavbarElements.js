@@ -25,9 +25,9 @@ export const NavbarContainer = styled.div`
   width: 100%;
   padding: 0 20px;
   transition: ease-in-out 0.5s;
-  background-color: ${({ changeNavBg, showMenu }) =>
-    changeNavBg ? "#444444" : showMenu ? "#00000050" : "#3f51b5"};
-  box-shadow: ${({ showMenu }) => (!showMenu ? "1px 1px 3px #ccc" : "")};
+  background-color: ${({ currentUser }) =>
+    currentUser ? "#444444" : "#3f51b5"};
+  box-shadow: ${({ currentUser }) => (!currentUser ? "1px 1px 3px #ccc" : "")};
 `;
 
 export const NavLogo = styled(LinkRouter)`
@@ -65,15 +65,14 @@ export const MobileIcon = styled.div`
 `;
 
 export const NavMenu = styled.ul`
-  display: flex;
   align-items: center;
   list-style: none;
   text-align: center;
   margin-right: 0px;
-  display: ${({ showMenu, logout }) => (showMenu || logout ? "" : "none")};
+  display: ${({ currentUser }) => (currentUser ? "none" : "flex")};
 
   @media screen and (max-width: 920px) {
-    display: ${({ showMenu, logout }) => (logout && !showMenu ? "" : "none")};
+    display: ${({ currentUser }) => (!currentUser ? "" : "none")};
   }
 `;
 

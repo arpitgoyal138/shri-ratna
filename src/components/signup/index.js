@@ -1,21 +1,41 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
 import Link from "@material-ui/core/Link";
 import Button from "../forms/Button";
 import FormInput from "../forms/FormInput";
 import "./../../assets/css/custom.scss";
-
-import { auth, handleUserProfile } from "./../../firebase/utils";
 import AuthWrapper from "../authWrapper";
-import { withRouter } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { signUpUserStart } from "../../redux/user/user.actions";
+
+const mapState = ({ user }) => ({
+  currentUser: user.currentUser,
+  userError: user.userError,
+});
 
 const SignUp = (props) => {
+  const history = useHistory();
+  const dispatch = useDispatch();
+
+  const { currentUser, userError } = useSelector(mapState);
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
+  useEffect(() => {
+    if (currentUser) {
+      resetForm();
+      history.push("/admin");
+    }
+  }, [currentUser]);
 
+  useEffect(() => {
+    if (userError !== "") {
+      setMessage(userError);
+    }
+  }, [userError]);
   const resetForm = () => {
     setDisplayName("");
     setEmail("");
@@ -24,24 +44,16 @@ const SignUp = (props) => {
     setMessage("");
   };
 
-  const handleFormSubmit = async (e) => {
+  const handleFormSubmit = (e) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      const err = "Password doesn't match";
-      setMessage(err);
-      return;
-    }
-    try {
-      const { user } = await auth.createUserWithEmailAndPassword(
+    dispatch(
+      signUpUserStart({
+        displayName,
         email,
-        password
-      );
-      await handleUserProfile(user, { displayName });
-      resetForm();
-      props.history.push("/admin");
-    } catch (err) {
-      setMessage(err.message);
-    }
+        password,
+        confirmPassword,
+      })
+    );
   };
 
   return (
@@ -102,4 +114,4 @@ const SignUp = (props) => {
   );
 };
 
-export default withRouter(SignUp);
+export default SignUp;

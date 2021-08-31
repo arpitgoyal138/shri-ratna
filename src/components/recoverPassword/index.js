@@ -1,41 +1,40 @@
 import { Grid } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "@material-ui/core/Link";
-import { auth } from "../../firebase/utils";
 import AuthWrapper from "../authWrapper";
 import Button from "../forms/Button";
 import FormInput from "../forms/FormInput";
 import "./../../assets/css/custom.scss";
-
+import { useDispatch, useSelector } from "react-redux";
+import { recoverPasswordStart } from "../../redux/user/user.actions";
+const mapState = ({ user }) => ({
+  recoverPasswordSuccess: user.recoverPasswordSuccess,
+  userError: user.userError,
+});
 const RecoverPassword = () => {
+  const { recoverPasswordSuccess, userError } = useSelector(mapState);
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
-    const config = {
-      url: "http://localhost:3000/login",
-    };
-    try {
-      await auth
-        .sendPasswordResetEmail(email, config)
-        .then(() => {
-          console.log("Link sent");
-          setEmail("");
-          setError("");
-          setSuccess("Link sent to email.");
-        })
-        .catch((err) => {
-          setSuccess("");
-          setError("No user registered with this Email address.");
-          console.log("err", err.message);
-        });
-    } catch (err) {
-      setSuccess("");
-      setError(err.message);
-      console.log(err);
+  useEffect(() => {
+    if (recoverPasswordSuccess) {
+      setSuccess("Link sent");
+      setError("");
     }
+  }, [recoverPasswordSuccess]);
+
+  useEffect(() => {
+    if (userError !== "") {
+      setSuccess("");
+      setError(userError);
+    }
+  }, [userError]);
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    dispatch(recoverPasswordStart({ email }));
   };
 
   return (
@@ -64,11 +63,7 @@ const RecoverPassword = () => {
 
         <Button type="submit">Send Link to Email</Button>
         <Grid container>
-          <Grid item xs>
-            {/* <Link href="/recovery" variant="body2">
-              Forgot password?
-            </Link> */}
-          </Grid>
+          <Grid item xs></Grid>
           <Grid item>
             <Link href="/register" variant="body2">
               {"Don't have an account? Sign Up"}

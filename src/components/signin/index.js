@@ -1,45 +1,48 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
-import { auth, signInWithGoogle } from "../../firebase/utils";
 import Button from "../forms/Button";
 import FormInput from "../forms/FormInput";
 import "./../../assets/css/custom.scss";
 import AuthWrapper from "../authWrapper";
-import { withRouter } from "react-router-dom";
-
-const Signin = (props) => {
+import { useHistory } from "react-router-dom";
+import {
+  emailSignInStart,
+  googleSignInStart,
+} from "../../redux/user/user.actions";
+const mapState = ({ user }) => ({
+  currentUser: user.currentUser,
+});
+const Signin = () => {
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const { currentUser } = useSelector(mapState);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    if (currentUser) {
+      resetForm();
+      history.push("/admin");
+    }
+  }, [currentUser]);
 
   const resetForm = () => {
     setEmail("");
     setPassword("");
     setMessage("");
   };
-  const handleFormSubmit = async (e) => {
+  const handleFormSubmit = (e) => {
     e.preventDefault();
-    try {
-      await auth.signInWithEmailAndPassword(email, password);
-      resetForm();
-      props.history.push("/admin");
-    } catch (err) {
-      console.log(err);
-      const errCode = err.code.substr(
-        err.code.indexOf("/") + 1,
-        err.code.length
-      );
-      if (errCode === "user-not-found") {
-        setMessage("No user found with this Email address.");
-      } else if (errCode === "wrong-password") {
-        setMessage(
-          'Please try again with correct password or use "Forgot Password" option.'
-        );
-      }
-    }
+    dispatch(emailSignInStart({ email, password }));
+  };
+
+  const handleSignInWithGoogle = () => {
+    dispatch(googleSignInStart());
   };
 
   return (
@@ -50,7 +53,11 @@ const Signin = (props) => {
             <li className="err_list">{message}</li>
           </ul>
         )}
-        <Button type="button" className="social_btn" onClick={signInWithGoogle}>
+        <Button
+          type="button"
+          className="social_btn"
+          onClick={handleSignInWithGoogle}
+        >
           Sign in with Google
         </Button>
 
@@ -95,4 +102,4 @@ const Signin = (props) => {
   );
 };
 
-export default withRouter(Signin);
+export default Signin;
