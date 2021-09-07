@@ -1,0 +1,92 @@
+// html {
+//   font-size: 10px;
+// }
+.admin {
+  padding: 0;
+
+  .callToActions {
+    display: inline-block;
+    width: 100%;
+    padding: 10px;
+    margin: 0 auto;
+
+    ul,
+    li {
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+    }
+
+    ul {
+      li {
+        display: inline-block;
+      }
+    }
+  }
+}
+
+.manageProducts {
+  h1 {
+    margin-top: 1rem;
+    color: #444;
+  }
+
+  table.results {
+    width: 100%;
+    tr {
+      td {
+        font-size: 1rem;
+        padding: 10px;
+        border: solid 1px #b0b0b0;
+      }
+      &:nth-child(even) {
+        background-color: #ededed;
+      }
+
+      .thumb {
+        width: 5rem;
+        margin: 0 auto;
+      }
+    }
+    tr.table_heading {
+      background-color: #444;
+      th {
+        color: #efefef;
+        border: solid 1px #b0b0b0;
+        padding: 10px;
+        font-weight: 400;
+        font-size: 1rem;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 980px) {
+  .manageProducts {
+    table {
+      width: 100%;
+
+      .results {
+        width: 100%;
+
+        tr td {
+          // display: block;
+          // width: 100%;
+          font-size: 1rem;
+          img {
+            // display: block;
+            // width: 100% !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+.delete-icon {
+  color: crimson;
+}
+
+.edit-icon {
+  color: blue;
+}

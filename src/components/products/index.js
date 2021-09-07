@@ -28,7 +28,7 @@ const Products = ({ heading }) => {
                 <ProductInfo>
                   <ProductName>{product.name}</ProductName>
                   <ProductDesc>{product.desc}</ProductDesc>
-                  <ProductPrice>Rs. {product.price}</ProductPrice>
+                  <ProductPrice>&#8377;{product.price}</ProductPrice>
                 </ProductInfo>
               </ProductCard>
             </Link>

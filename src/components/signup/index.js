@@ -27,7 +27,7 @@ const SignUp = (props) => {
   useEffect(() => {
     if (currentUser) {
       resetForm();
-      history.push("/admin");
+      history.push("/");
     }
   }, [currentUser]);
 

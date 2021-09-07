@@ -10,11 +10,13 @@ export const Nav = styled.nav`
   position: sticky;
   top: 0;
   z-index: 10;
-  box-shadow: 0 0 3px #fff;
   transition: 0.8s all ease;
   @media screen and (max-width: 960px) {
     transition: 0.8s all ease;
   }
+  background-color: ${({ currentUser }) =>
+    currentUser ? "#444444" : "#000000d6"};
+  box-shadow: ${({ currentUser }) => (!currentUser ? "0 2px 4px #cbcbcb" : "")};
 `;
 
 export const NavbarContainer = styled.div`
@@ -25,16 +27,13 @@ export const NavbarContainer = styled.div`
   width: 100%;
   padding: 0 20px;
   transition: ease-in-out 0.5s;
-  background-color: ${({ currentUser }) =>
-    currentUser ? "#444444" : "#00000090"};
-  box-shadow: ${({ currentUser }) => (!currentUser ? "1px 1px 3px #ccc" : "")};
 `;
 
 export const NavLogo = styled(LinkRouter)`
   color: #efefef;
   justify-self: flex-start;
   cursor: pointer;
-  font-size: 1.8rem;
+  font-size: 2rem;
   display: flex;
   align-items: center;
   margin-left: 0;
@@ -50,7 +49,7 @@ export const NavLogo = styled(LinkRouter)`
 export const MobileIcon = styled.div`
   display: none;
   transition: 0.3s ease-in-out;
-  @media screen and (max-width: 920px) {
+  @media screen and (max-width: 640px) {
     /* display: block; */
     position: absolute;
     top: 0;
@@ -59,8 +58,7 @@ export const MobileIcon = styled.div`
     font-size: 1.8rem;
     cursor: pointer;
     color: #efefef;
-    display: ${({ isOpen, showMenu }) =>
-      isOpen || !showMenu ? "none" : "block"};
+    display: ${({ isMenuOpen }) => (isMenuOpen ? "none" : "block")};
   }
 `;
 
@@ -77,7 +75,8 @@ export const NavMenu = styled.ul`
 `;
 
 export const NavItem = styled.li`
-  // height: 80px;
+  height: -webkit-fill-available;
+  display: contents;
 `;
 export const NavLinks = styled(LinkScroll)`
   color: #efefef;
@@ -90,14 +89,15 @@ export const NavLinks = styled(LinkScroll)`
   letter-spacing: 1px;
   text-shadow: 1px 1px 3px 3px #000;
   /* transition: 0.3s ease; */
-  &:hover {
+
+  /* &:hover {
     color: yellow;
     border-bottom: 2px solid yellow;
   }
   &.active {
     color: yellow;
     border-bottom: 2px solid yellow;
-  }
+  } */
 `;
 
 export const LogoutBtn = styled.button`
@@ -106,6 +106,14 @@ export const LogoutBtn = styled.button`
   color: #efefef;
   font-size: 1.5rem;
   cursor: pointer;
+  height: inherit;
+  padding: 10px;
+  &:hover {
+    background-color: #fff;
+    opacity: 0.6;
+    color: #000000 !important;
+    transition: all 0.4s ease-in-out;
+  }
 `;
 export const SignInBtn = styled.button`
   background: none;
@@ -113,4 +121,12 @@ export const SignInBtn = styled.button`
   color: #efefef;
   font-size: 1.5rem;
   cursor: pointer;
+  height: inherit;
+  padding: 10px;
+  &:hover {
+    background-color: #fff;
+    opacity: 0.6;
+    color: #000000 !important;
+    transition: all 0.4s ease-in-out;
+  }
 `;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaBars, FaSignOutAlt, FaSignInAlt } from "react-icons/fa";
 import {
   Nav,
@@ -16,6 +16,8 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { signOutUserStart } from "./../../redux/user/user.actions";
 import { useHistory } from "react-router-dom";
+import AdminToolbar from "../adminToolbar";
+
 const mapState = ({ user }) => ({
   currentUser: user.currentUser,
 });
@@ -27,26 +29,27 @@ const Navbar = (props) => {
   const { currentUser } = useSelector(mapState);
   const dispatch = useDispatch();
   const history = useHistory();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   const signOut = () => {
     dispatch(signOutUserStart());
   };
   const signIn = () => {
     history.push("/login");
   };
+  const toggleSidebar = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
   return (
     <>
-      <Nav>
-        <NavbarContainer currentUser={currentUser}>
+      <Nav currentUser={currentUser}>
+        <NavbarContainer>
           <NavLogo to="/" onClick={toggleHome}>
             श्री रत्न भण्डार
           </NavLogo>
-          {/* <MobileIcon
-            isOpen={isMenuOpen}
-            onClick={toggleSidebar}
-            showMenu={showMenu}
-          >
+          <MobileIcon isOpen={isMenuOpen} onClick={toggleSidebar}>
             <FaBars />
-          </MobileIcon> */}
+          </MobileIcon>
           {currentUser && (
             <NavMenu logout={true}>
               <NavItem>

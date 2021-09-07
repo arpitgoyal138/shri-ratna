@@ -1,21 +1,35 @@
+// react libraries
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import "./App.css";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+
+// Pages
 import ProductDetail from "./pages/ProductDetail";
+import Admin from "./pages/Admin";
+import Registration from "./pages/Registration";
+import Recovery from "./pages/Recovery";
 import Login from "./pages/Login";
-import AdminHomepage from "./pages/Admin/Home";
 import Home from "./pages/Homepage";
+
+// components
+import AdminToolbar from "./components/adminToolbar";
+
+// Lauouts
 import AdminPageLayout from "./layouts/AdminPageLayout";
 import HomePageLayout from "./layouts/HomePageLayout";
 import LoginPageLayout from "./layouts/LoginPageLayout";
 import ProductDetailPageLayout from "./layouts/ProductDetailPageLayout";
-import Registration from "./pages/Registration";
-import Recovery from "./pages/Recovery";
+
+// redux
 import { checkUserSession } from "./redux/user/user.actions";
 
+//hoc (higher order components)
 import WithAuth from "./hoc/withAuth";
+import WithAdminAuth from "./hoc/withAdminAuth";
 
+// stylesheets
+import "./App.scss";
+// import "./default.scss";
 const App = (props) => {
   const dispatch = useDispatch();
 
@@ -25,6 +39,7 @@ const App = (props) => {
 
   return (
     <Router>
+      <AdminToolbar />
       <Switch>
         <Route
           path="/"
@@ -54,11 +69,11 @@ const App = (props) => {
         <Route
           path="/admin"
           render={() => (
-            <WithAuth>
+            <WithAdminAuth>
               <AdminPageLayout>
-                <AdminHomepage />
+                <Admin />
               </AdminPageLayout>
-            </WithAuth>
+            </WithAdminAuth>
           )}
         />
         <Route

@@ -1,12 +1,16 @@
 import React from "react";
-import Navbar from "../components/navbar";
+
+import AdminNavbar from "./../components/adminNavbar";
+import Footer from "./../components/footer";
 
 const AdminPageLayout = (props) => {
-  console.log(props);
   return (
-    <div className="fullHeight">
-      <Navbar {...props} />
-      {props.children}
+    <div className="adminLayout">
+      <AdminNavbar {...props} />
+      <div className="controlPanel">
+        <div className="content">{props.children}</div>
+      </div>
+      <Footer />
     </div>
   );
 };

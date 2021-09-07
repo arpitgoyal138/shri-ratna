@@ -27,7 +27,7 @@ const Signin = () => {
   useEffect(() => {
     if (currentUser) {
       resetForm();
-      history.push("/admin");
+      history.push("/");
     }
   }, [currentUser]);
 

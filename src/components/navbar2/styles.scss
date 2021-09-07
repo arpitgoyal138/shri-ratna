@@ -1,0 +1,142 @@
+a {
+  text-decoration: none;
+}
+.navbarItems {
+  position: sticky;
+  top: 0;
+  //   background: linear-gradient(
+  //     90deg,
+  //     rgb(110, 94, 254) 0%,
+  //     rgb(73, 63, 252) 100%
+  //   );
+  background: linear-gradient(90deg, #2525259e 0%, #000000 100%);
+  justify-content: center;
+  display: flex;
+  font-size: 1.2rem;
+  align-items: center;
+  height: 60px;
+  z-index: 1000;
+}
+
+.navbar-logo {
+  color: #fff;
+  justify-self: start;
+  margin-left: 10px;
+  cursor: pointer;
+  &:hover {
+    transition: all 0.3s ease-out;
+    color: #ccc;
+  }
+}
+
+.fa-react {
+  margin-left: 0.5rem;
+  font-size: 2rem;
+}
+
+.nav-menu {
+  display: grid;
+  grid-template-columns: repeat(5, auto);
+  grid-gap: 10px;
+  list-style: none;
+  text-align: center;
+  width: 65vw;
+  justify-content: end;
+  margin-right: 2rem;
+}
+
+.nav-links {
+  color: #fff;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  &:hover {
+    // background-color: #6d76f7;
+    background-color: #ffffff2e;
+    border-radius: 4px;
+    transition: all 0.3s ease-out;
+  }
+}
+
+.fa-bars {
+  color: #fff;
+  vertical-align: -webkit-baseline-middle;
+}
+
+.nav-links-mobile {
+  display: none;
+}
+
+.menu-icon {
+  display: none;
+  height: 100%;
+}
+
+@media screen and (max-width: 1100px) {
+  //   .navbarItems {
+  //     position: relative;
+  //   }
+  .nav-menu {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    position: absolute;
+    top: 60px;
+    left: -100%;
+    opacity: 1;
+    transition: all 0.5s ease;
+  }
+  .nav-menu.active {
+    // background: #6668f4;
+    background: #000000cc;
+    left: 0;
+    opacity: 1;
+    transition: all 0.5s ease;
+    z-index: 1;
+  }
+  .nav-links {
+    text-align: center;
+    padding: 2rem;
+    width: 100%;
+    display: table;
+    font-size: 1.5rem;
+    &:hover {
+      //   background-color: #7577fa;
+      background-color: #91919161;
+      border-radius: 0;
+    }
+  }
+  .navbar-logo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(30%, 26%);
+  }
+  .menu-icon {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(100%, 0);
+    font-size: 1.8rem;
+    cursor: pointer;
+  }
+}
+
+.fa-times {
+  color: #fff;
+  font-size: 2rem;
+  vertical-align: -webkit-baseline-middle;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .fa-react {
+    animation: App-logo-spin infinite 10s linear;
+  }
+}
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

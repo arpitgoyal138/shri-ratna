@@ -3,13 +3,17 @@ import Image1 from "../../assets/images/slider1.jpg";
 import Image3 from "../../assets/images/zodiac-signs.jpg";
 import Image2 from "../../assets/images/slider3.jpg";
 
-import { IntroSliderContainer, IntroBg } from "./IntroSliderElements";
+import {
+  IntroSliderContainer,
+  IntroBg,
+  TextOverImage,
+} from "./IntroSliderElements";
 import { Carousel } from "react-responsive-carousel";
 import styles from "react-responsive-carousel/lib/styles/carousel.min.css";
 
 const legendStyle = {
   color: "#efefef",
-  fontSize: "1.8rem",
+  fontSize: "2rem",
   padding: "10px",
   opacity: "1",
   background: "#00000080",
@@ -46,9 +50,11 @@ const IntroSlider = () => {
               alt="temples, idols, dresses"
             />
             <p className="legend" style={legendStyle}>
-              {/* विभिन्न प्रकार के  */}
               मंदिर, शिवलिंग, धातु की मूर्तियां व उन्के वस्त्र, आभूषण इत्यादि
             </p>
+            {/* <TextOverImage>
+              मंदिर, शिवलिंग, धातु की मूर्तियां व उन्के वस्त्र, आभूषण इत्यादि
+            </TextOverImage> */}
           </div>
           <div>
             <img
