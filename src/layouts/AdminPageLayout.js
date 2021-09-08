@@ -7,6 +7,7 @@ const AdminPageLayout = (props) => {
   return (
     <div className="adminLayout">
       <AdminNavbar {...props} />
+
       <div className="controlPanel">
         <div className="content">{props.children}</div>
       </div>

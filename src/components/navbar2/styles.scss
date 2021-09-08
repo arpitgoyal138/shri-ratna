@@ -30,8 +30,8 @@ a {
 }
 
 .fa-react {
-  margin-left: 0.5rem;
-  font-size: 2rem;
+  margin-left: 0.3rem;
+  font-size: 1.5rem;
 }
 
 .nav-menu {
@@ -69,6 +69,10 @@ a {
 .menu-icon {
   display: none;
   height: 100%;
+  .mui-icon {
+    color: #fff !important;
+    font-size: 2rem;
+  }
 }
 
 @media screen and (max-width: 1100px) {
@@ -109,16 +113,16 @@ a {
     position: absolute;
     top: 0;
     left: 0;
-    transform: translate(30%, 26%);
+    transform: translate(25%, 25%);
   }
   .menu-icon {
     display: block;
     position: absolute;
-    top: 0;
     left: 0;
-    transform: translate(100%, 0);
-    font-size: 1.8rem;
     cursor: pointer;
+    background: none;
+    border: 0;
+    padding: 10px;
   }
 }
 
@@ -129,7 +133,7 @@ a {
 }
 @media (prefers-reduced-motion: no-preference) {
   .fa-react {
-    animation: App-logo-spin infinite 10s linear;
+    animation: App-logo-spin infinite 15s linear;
   }
 }
 @keyframes App-logo-spin {
@@ -138,5 +142,29 @@ a {
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+.button {
+  position: absolute !important;
+  right: 0;
+  top: 0;
+  transform: translate(-20%, 35%);
+}
+.button-mobile {
+  display: none !important;
+  position: absolute !important;
+  right: 0;
+  top: 0;
+  color: white !important;
+  font-size: 1.5rem !important;
+  height: 100%;
+}
+@media screen and (max-width: 400px) {
+  .button {
+    display: none !important;
+  }
+  .button-mobile {
+    display: block !important;
   }
 }

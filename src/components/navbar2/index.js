@@ -6,6 +6,8 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { signOutUserStart } from "./../../redux/user/user.actions";
 import { useHistory } from "react-router-dom";
+import MenuIcon from "@material-ui/icons/Menu";
+import CloseIcon from "@material-ui/icons/Close";
 const mapState = ({ user }) => ({
   currentUser: user.currentUser,
 });
@@ -31,9 +33,10 @@ export default function Navbar2() {
         </h1>
       </a>
 
-      <div className="menu-icon" onClick={toggleMenu}>
-        <i className={isMenuOpen ? "fas fa-times" : "fas fa-bars"}></i>
-      </div>
+      <button className="menu-icon" onClick={toggleMenu}>
+        {isMenuOpen && <CloseIcon className="mui-icon" />}
+        {!isMenuOpen && <MenuIcon className="mui-icon" />}
+      </button>
       <ul className={isMenuOpen ? "nav-menu active" : "nav-menu"}>
         {WebsiteMenuItems.map((item, index) => {
           return (
@@ -46,32 +49,32 @@ export default function Navbar2() {
         })}
       </ul>
       {currentUser && (
-        <Button
-          style={{
-            position: "absolute",
-            right: "0",
-            top: "0",
-            transform: "translate(-20%, 35%)",
-          }}
-          variant="contained"
-          onClick={() => signOut()}
-        >
-          Logout
-        </Button>
+        <>
+          <Button
+            className="button"
+            variant="contained"
+            onClick={() => signOut()}
+          >
+            Logout
+          </Button>
+          <Button className="button-mobile" onClick={() => signOut()}>
+            <i class="fas fa-sign-out-alt"></i>
+          </Button>
+        </>
       )}
       {!currentUser && (
-        <Button
-          style={{
-            position: "absolute",
-            right: "0",
-            top: "0",
-            transform: "translate(-20%, 35%)",
-          }}
-          variant="contained"
-          onClick={() => signIn()}
-        >
-          Login
-        </Button>
+        <>
+          <Button
+            className="button"
+            variant="contained"
+            onClick={() => signIn()}
+          >
+            Login
+          </Button>
+          <Button className="button-mobile" onClick={() => signIn()}>
+            <i class="fas fa-sign-in-alt"></i>
+          </Button>
+        </>
       )}
     </nav>
   );

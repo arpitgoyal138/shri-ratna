@@ -6,9 +6,6 @@ import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import AccountCircle from "@material-ui/icons/AccountCircle";
-import Switch from "@material-ui/core/Switch";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormGroup from "@material-ui/core/FormGroup";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import { AdminMenuItems } from "./../menuItems";
@@ -40,6 +37,12 @@ const useStyles = makeStyles((theme) => ({
   },
   fullList: {
     width: "auto",
+  },
+  menuItemLink: {
+    color: "darkslategray",
+  },
+  muiIcon: {
+    fontSize: "2rem",
   },
 }));
 const mapState = ({ user }) => ({
@@ -90,7 +93,7 @@ export default function AdminNavbar() {
               aria-label="menu"
               onClick={toggleDrawer()}
             >
-              <MenuIcon />
+              <MenuIcon className={classes.muiIcon} />
             </IconButton>
 
             <SwipeableDrawer
@@ -107,9 +110,9 @@ export default function AdminNavbar() {
               >
                 <List>
                   {AdminMenuItems.map((item, index) => (
-                    <a href={item.url}>
+                    <a className={classes.menuItemLink} href={item.url}>
                       <ListItem button key={index}>
-                        <ListItemIcon>
+                        <ListItemIcon className={classes.muiIcon}>
                           {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
                         </ListItemIcon>
                         <ListItemText primary={item.title} />
@@ -133,7 +136,7 @@ export default function AdminNavbar() {
                 onClick={handleMenu}
                 color="inherit"
               >
-                <AccountCircle />
+                <AccountCircle className={classes.muiIcon} />
               </IconButton>
               <Menu
                 id="menu-appbar"

@@ -180,7 +180,7 @@ const Admin = (props) => {
                     <th>Title</th>
                     <th>Category</th>
                     <th>Price</th>
-                    <th>Created at</th>
+                    {/* <th>Created at</th> */}
                     <th>Actions</th>
                   </tr>
                   <tbody>
@@ -208,29 +208,38 @@ const Admin = (props) => {
                             <td>{productName}</td>
                             <td>{productCategory}</td>
                             <td>Rs. {productPrice}</td>
-                            <td>
+                            {/* <td>
                               {createdDate.toDate().toDateString()}{" "}
                               {createdDate.toDate().toLocaleTimeString()}
-                            </td>
+                            </td> */}
 
                             <td>
                               <Tooltip
                                 title="Hide the product from website"
                                 aria-label="Visibility"
                               >
-                                <IconButton aria-label="Visibility">
-                                  <VisibilityIcon />
+                                <IconButton
+                                  className="action-button"
+                                  aria-label="Visibility"
+                                >
+                                  <VisibilityIcon className="action-icons eye-icon" />
                                 </IconButton>
                               </Tooltip>
                               <Tooltip title="Edit product" aria-label="edit">
-                                <IconButton aria-label="edit">
-                                  <EditIcon className="edit-icon" />
+                                <IconButton
+                                  className="action-button"
+                                  aria-label="edit"
+                                >
+                                  <EditIcon className="action-icons edit-icon" />
                                 </IconButton>
                               </Tooltip>
                               <Tooltip title="Delete">
-                                <IconButton aria-label="delete">
+                                <IconButton
+                                  className="action-button"
+                                  aria-label="delete"
+                                >
                                   <DeleteIcon
-                                    className="delete-icon"
+                                    className="action-icons delete-icon"
                                     onClick={() =>
                                       dispatch(deleteProductStart(documentID))
                                     }

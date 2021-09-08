@@ -30,7 +30,9 @@
     margin-top: 1rem;
     color: #444;
   }
-
+  table {
+    width: 100%;
+  }
   table.results {
     width: 100%;
     tr {
@@ -38,6 +40,7 @@
         font-size: 1rem;
         padding: 10px;
         border: solid 1px #b0b0b0;
+        text-align: center;
       }
       &:nth-child(even) {
         background-color: #ededed;
@@ -61,21 +64,41 @@
   }
 }
 
-@media only screen and (max-width: 980px) {
+@media only screen and (max-width: 480px) {
+  .action-button {
+    padding: 5px !important;
+  }
+  .action-icons {
+    font-size: 1rem !important;
+  }
   .manageProducts {
     table {
       width: 100%;
 
       .results {
         width: 100%;
-
+        tr.table_heading {
+          background-color: #444;
+          th {
+            color: #efefef;
+            border: solid 1px #b0b0b0;
+            padding: 2px;
+            font-weight: 400;
+            font-size: 0.85rem;
+          }
+        }
         tr td {
           // display: block;
           // width: 100%;
-          font-size: 1rem;
+          font-size: 0.85rem;
+          padding: 2px;
           img {
             // display: block;
             // width: 100% !important;
+          }
+          .thumb {
+            width: 3rem;
+            margin: 0 auto;
           }
         }
       }
