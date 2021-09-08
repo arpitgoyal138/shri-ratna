@@ -7,6 +7,7 @@ import Grid from "@material-ui/core/Grid";
 import Button from "../forms/Button";
 import FormInput from "../forms/FormInput";
 import "./../../assets/css/custom.scss";
+import "./../../App.scss";
 import AuthWrapper from "../authWrapper";
 import { useHistory } from "react-router-dom";
 import {

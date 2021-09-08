@@ -4,7 +4,16 @@
   padding: 0;
   font-family: calibri;
 }
-
+body {
+  color: rgba(0, 0, 0, 0.87);
+  margin: 0;
+  font-size: 0.875rem;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 400;
+  line-height: 1.43;
+  letter-spacing: 0.01071em;
+  background-color: #fafafa;
+}
 /* .App {
   text-align: center;
 }
@@ -72,12 +81,5 @@
 
   .controlPanel {
     padding: 0;
-
-    .sidebar {
-      position: relative;
-      width: 100%;
-      border: none;
-      margin-bottom: 2.5rem;
-    }
   }
 }

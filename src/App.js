@@ -29,7 +29,6 @@ import WithAdminAuth from "./hoc/withAdminAuth";
 
 // stylesheets
 import "./App.scss";
-// import "./default.scss";
 const App = (props) => {
   const dispatch = useDispatch();
 

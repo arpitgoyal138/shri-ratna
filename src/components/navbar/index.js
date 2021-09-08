@@ -1,129 +1,81 @@
+import { Button } from "@material-ui/core";
 import React, { useState } from "react";
-import { FaBars, FaSignOutAlt, FaSignInAlt } from "react-icons/fa";
-import {
-  Nav,
-  NavbarContainer,
-  NavLogo,
-  MobileIcon,
-  NavMenu,
-  NavItem,
-  NavLinks,
-  LogoutBtn,
-  SignInBtn,
-} from "./NavbarElements";
-import { animateScroll as scroll } from "react-scroll";
+import { WebsiteMenuItems } from "../menuItems";
+import "./styles.scss";
 import { useSelector, useDispatch } from "react-redux";
 
 import { signOutUserStart } from "./../../redux/user/user.actions";
 import { useHistory } from "react-router-dom";
-import AdminToolbar from "../adminToolbar";
-
+import MenuIcon from "@material-ui/icons/Menu";
+import CloseIcon from "@material-ui/icons/Close";
 const mapState = ({ user }) => ({
   currentUser: user.currentUser,
 });
-const toggleHome = () => {
-  scroll.scrollToTop();
-};
-
-const Navbar = (props) => {
+export default function Navbar2() {
   const { currentUser } = useSelector(mapState);
   const dispatch = useDispatch();
   const history = useHistory();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
   const signOut = () => {
     dispatch(signOutUserStart());
   };
   const signIn = () => {
     history.push("/login");
   };
-  const toggleSidebar = () => {
+  const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
   return (
-    <>
-      <Nav currentUser={currentUser}>
-        <NavbarContainer>
-          <NavLogo to="/" onClick={toggleHome}>
-            श्री रत्न भण्डार
-          </NavLogo>
-          <MobileIcon isOpen={isMenuOpen} onClick={toggleSidebar}>
-            <FaBars />
-          </MobileIcon>
-          {currentUser && (
-            <NavMenu logout={true}>
-              <NavItem>
-                <LogoutBtn onClick={() => signOut()}>
-                  {/* <FaSignOutAlt /> */}
-                  Logout
-                </LogoutBtn>
-              </NavItem>
-            </NavMenu>
-          )}
-          {!currentUser && (
-            <NavMenu>
-              <NavItem>
-                <SignInBtn onClick={() => signIn()}>
-                  {/* <FaSignInAlt /> */}
-                  Login
-                </SignInBtn>
-              </NavItem>
-            </NavMenu>
-          )}
-          {/* <NavMenu currentUser={currentUser}>
-            <NavItem>
-              <NavLinks
-                to="products"
-                smooth={true}
-                // duration={500}
-                spy={true}
-                exact="true"
-                offset={-80}
-              >
-                मंदिर, मूर्तियां व पूजा सामग्री आदि
-              </NavLinks>
-            </NavItem>
-            <NavItem>
-              <NavLinks
-                to="about"
-                smooth={true}
-                duration={500}
-                spy={true}
-                exact="true"
-                offset={-80}
-              >
-                ज्योतिष परामर्श
-              </NavLinks>
-            </NavItem>
-            <NavItem>
-              <NavLinks
-                to="about"
-                smooth={true}
-                duration={500}
-                spy={true}
-                exact="true"
-                offset={-80}
-              >
-                परिचय जानें
-              </NavLinks>
-            </NavItem>
-            <NavItem>
-              <NavLinks
-                to="about"
-                smooth={true}
-                duration={500}
-                spy={true}
-                exact="true"
-                offset={-80}
-              >
-                सम्पर्क करें
-              </NavLinks>
-            </NavItem>
-          </NavMenu> */}
-        </NavbarContainer>
-      </Nav>
-    </>
-  );
-};
+    <nav className="navbarItems">
+      <a href="/">
+        <h1 className="navbar-logo">
+          श्री रत्न भण्डार <i className="fab fa-react"></i>
+        </h1>
+      </a>
 
-export default Navbar;
+      <button className="menu-icon" onClick={toggleMenu}>
+        {isMenuOpen && <CloseIcon className="mui-icon" />}
+        {!isMenuOpen && <MenuIcon className="mui-icon" />}
+      </button>
+      <ul className={isMenuOpen ? "nav-menu active" : "nav-menu"}>
+        {WebsiteMenuItems.map((item, index) => {
+          return (
+            <li key={index}>
+              <a className={item.clsName} href={item.url}>
+                {item.title}
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+      {currentUser && (
+        <>
+          <Button
+            className="button"
+            variant="contained"
+            onClick={() => signOut()}
+          >
+            Logout
+          </Button>
+          <Button className="button-mobile" onClick={() => signOut()}>
+            <i class="fas fa-sign-out-alt"></i>
+          </Button>
+        </>
+      )}
+      {!currentUser && (
+        <>
+          <Button
+            className="button"
+            variant="contained"
+            onClick={() => signIn()}
+          >
+            Login
+          </Button>
+          <Button className="button-mobile" onClick={() => signIn()}>
+            <i class="fas fa-sign-in-alt"></i>
+          </Button>
+        </>
+      )}
+    </nav>
+  );
+}
