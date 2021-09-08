@@ -11,7 +11,7 @@ import CloseIcon from "@material-ui/icons/Close";
 const mapState = ({ user }) => ({
   currentUser: user.currentUser,
 });
-export default function Navbar2() {
+export default function Navbar() {
   const { currentUser } = useSelector(mapState);
   const dispatch = useDispatch();
   const history = useHistory();

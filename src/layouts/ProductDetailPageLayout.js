@@ -1,11 +1,11 @@
 import React from "react";
-import Navbar2 from "../components/navbar2";
+import Navbar from "../components/navbar";
 
 const ProductDetailPageLayout = (props) => {
   console.log("ProductDetailPageLayout props:", props);
   return (
     <div className="fullHeight">
-      <Navbar2 {...props} />
+      <Navbar {...props} />
       {props.children}
     </div>
   );
