@@ -41,6 +41,10 @@ export const userError = (err) => ({
   type: userTypes.USER_ERROR,
   payload: err,
 });
+export const isLoading = (val) => ({
+  type: userTypes.IS_LOADING,
+  payload: val,
+});
 
 export const googleSignInStart = () => ({
   type: userTypes.GOOGLE_SIGN_IN_START,

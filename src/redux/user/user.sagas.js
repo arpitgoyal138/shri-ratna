@@ -12,18 +12,22 @@ import {
   signOutUserSuccess,
   userError,
   recoverPasswordSuccess,
+  isLoading,
 } from "./user.actions";
 import { handleRecoverPasswordAPI } from "./user.helpers";
 
 export function* getSnapshotFromUserAuth(user, additionalData = {}) {
   try {
+    yield put(isLoading(true));
     const userRef = yield call(handleUserProfile, {
       userAuth: user,
       additionalData,
     });
     const snapshot = yield userRef.get();
     yield put(signInSuccess({ uid: snapshot.id, ...snapshot.data() }));
-  } catch (err) {}
+  } catch (err) {
+    yield put(isLoading(false));
+  }
 }
 
 export function* emailSignIn({ payload: { email, password } }) {
@@ -44,6 +48,8 @@ export function* emailSignIn({ payload: { email, password } }) {
 }
 
 export function* onEmailSignInStart() {
+  console.log("USER_SAGA: onEmailSignInStart");
+
   yield takeLatest(userTypes.EMAIL_SIGN_IN_START, emailSignIn);
 }
 
@@ -52,10 +58,13 @@ export function* isUserAuthenticated() {
     const userAuth = yield getCurrentUser();
     if (!userAuth) return;
     yield getSnapshotFromUserAuth(userAuth);
-  } catch (err) {}
+  } catch (err) {
+    yield put(isLoading(false));
+  }
 }
 
 export function* onCheckUserSession() {
+  console.log("USER_SAGA: onCheckUserSession");
   yield takeLatest(userTypes.CHECK_USER_SESSION, isUserAuthenticated);
 }
 
@@ -63,10 +72,14 @@ export function* signOutUser() {
   try {
     yield auth.signOut();
     yield put(signOutUserSuccess());
-  } catch (err) {}
+  } catch (err) {
+    yield put(isLoading(false));
+  }
 }
 
 export function* onSignOutUserStart() {
+  console.log("USER_SAGA: onSignOutUserStart");
+
   yield takeLatest(userTypes.SIGN_OUT_USER_START, signOutUser);
 }
 
@@ -89,6 +102,8 @@ export function* signUpUser({
   }
 }
 export function* onSignUpUserStart() {
+  console.log("USER_SAGA: onSignUpUserStart");
+
   yield takeLatest(userTypes.SIGN_UP_USER_START, signUpUser);
 }
 
@@ -102,6 +117,7 @@ export function* recoverPassword({ payload: { email } }) {
 }
 
 export function* onRecoverPasswordStart() {
+  console.log("USER_SAGA: onRecoverPasswordStart");
   yield takeLatest(userTypes.RECOVER_PASSWORD_START, recoverPassword);
 }
 
@@ -109,10 +125,13 @@ export function* googleSignIn() {
   try {
     const { user } = yield auth.signInWithPopup(GoogleProvider);
     yield getSnapshotFromUserAuth(user);
-  } catch (err) {}
+  } catch (err) {
+    yield put(isLoading(false));
+  }
 }
 
 export function* onGoogleSignInStart() {
+  console.log("USER_SAGA: onGoogleSignInStart");
   yield takeLatest(userTypes.GOOGLE_SIGN_IN_START, googleSignIn);
 }
 

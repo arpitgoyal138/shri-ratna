@@ -1,6 +1,6 @@
 // react libraries
 import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 // Pages
@@ -14,7 +14,7 @@ import Home from "./pages/Homepage";
 // components
 import AdminToolbar from "./components/adminToolbar";
 
-// Lauouts
+// Layouts
 import AdminPageLayout from "./layouts/AdminPageLayout";
 import HomePageLayout from "./layouts/HomePageLayout";
 import LoginPageLayout from "./layouts/LoginPageLayout";
@@ -29,16 +29,27 @@ import WithAdminAuth from "./hoc/withAdminAuth";
 
 // stylesheets
 import "./App.scss";
+// Material UI
+import CircularProgress from "@material-ui/core/CircularProgress";
+const mapState = ({ user }) => ({
+  loading: user.loading,
+});
 const App = (props) => {
+  const { loading } = useSelector(mapState);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(checkUserSession());
+    //dispatch(checkUserSession());
   }, []);
 
   return (
     <Router>
       <AdminToolbar />
+      {loading && (
+        <div className="loader-container">
+          <CircularProgress className="loader" />
+        </div>
+      )}
       <Switch>
         <Route
           path="/"
