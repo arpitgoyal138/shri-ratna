@@ -49,7 +49,6 @@ export function* emailSignIn({ payload: { email, password } }) {
 
 export function* onEmailSignInStart() {
   console.log("USER_SAGA: onEmailSignInStart");
-
   yield takeLatest(userTypes.EMAIL_SIGN_IN_START, emailSignIn);
 }
 

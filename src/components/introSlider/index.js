@@ -13,7 +13,7 @@ import styles from "react-responsive-carousel/lib/styles/carousel.min.css";
 
 const legendStyle = {
   color: "#efefef",
-  fontSize: "2rem",
+  fontSize: "1.8rem",
   padding: "10px",
   opacity: "1",
   background: "#00000080",

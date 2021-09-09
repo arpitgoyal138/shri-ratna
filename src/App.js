@@ -39,7 +39,7 @@ const App = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    //dispatch(checkUserSession());
+    dispatch(checkUserSession());
   }, []);
 
   return (

@@ -55,6 +55,6 @@ export const TextOverImage = styled.p`
   padding-left: 10px;
   padding-right: 10px;
   color: #fff;
-  font-size: 2rem;
+  font-size: 1.5rem;
   background: #0000005c;
 `;
