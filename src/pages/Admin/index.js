@@ -28,7 +28,7 @@ const Admin = (props) => {
   const { products } = useSelector(mapState);
   const dispatch = useDispatch();
   const [hideModal, setHideModal] = useState(true);
-  const [productCategory, setProductCategory] = useState("mens");
+  const [productCategory, setProductCategory] = useState("Category-1");
   const [productName, setProductName] = useState("");
   const [productThumbnail, setProductThumbnail] = useState("");
   const [productPrice, setProductPrice] = useState(0);
@@ -49,7 +49,7 @@ const Admin = (props) => {
 
   const resetForm = () => {
     setHideModal(true);
-    setProductCategory("mens");
+    setProductCategory("Category-1");
     setProductName("");
     setProductThumbnail("");
     setProductPrice(0);
@@ -112,22 +112,23 @@ const Admin = (props) => {
               label="Category"
               options={[
                 {
-                  value: "mens",
-                  name: "Mens",
+                  value: "Category-1",
+                  name: "Category-1",
                 },
                 {
-                  value: "womens",
-                  name: "Womens",
+                  value: "Category-2",
+                  name: "Category-2",
                 },
               ]}
               handleChange={(e) => setProductCategory(e.target.value)}
             />
 
             <FormInput
-              label="Name"
+              label="Title"
               type="text"
               value={productName}
               handleChange={(e) => setProductName(e.target.value)}
+              required
             />
 
             <FormInput
@@ -145,6 +146,7 @@ const Admin = (props) => {
               step="0.01"
               value={productPrice}
               handleChange={(e) => setProductPrice(e.target.value)}
+              required
             />
 
             {/* <CKEditor
