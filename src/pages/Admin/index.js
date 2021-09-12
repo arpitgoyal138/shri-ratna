@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addProductStart,
+  updateProductStart,
   fetchProductsStart,
   deleteProductStart,
   addCategoryStart,
@@ -44,15 +45,29 @@ const Admin = (props) => {
     id: "",
     name: "",
   });
-
+  const [selProductId, setSelProductId] = useState("");
+  const [selAction, setSelAction] = useState("");
   const { data, queryDoc, isLastPage } = products;
   useEffect(() => {
     dispatch(fetchProductsStart());
     dispatch(fetchCategoriesStart());
   }, []);
 
-  const toggleAddProductModal = () =>
+  const toggleAddProductModal = (action, currentProduct, documentID) => {
+    console.log("currentProduct:", currentProduct);
+    setSelAction(action);
+    if (action === "edit") {
+      setSelProductId(documentID);
+      setProductName(currentProduct.productName);
+      setProductPrice(currentProduct.productPrice);
+      setProductThumbnail(currentProduct.productThumbnail);
+      setProductDesc(currentProduct.productDesc);
+      setProductCategory(currentProduct.productCategory);
+    } else {
+      resetAddProductForm();
+    }
     setHideAddProductModal(!hideAddProductModal);
+  };
 
   const configAddProductModal = {
     hideModal: hideAddProductModal,
@@ -74,6 +89,7 @@ const Admin = (props) => {
     setProductThumbnail("");
     setProductPrice(0);
     setProductDesc("");
+    setSelProductId("");
   };
   const resetAddCategoryForm = () => {
     setHideAddCategoryModal(true);
@@ -82,15 +98,30 @@ const Admin = (props) => {
   };
   const handleAddProductSubmit = (e) => {
     e.preventDefault();
-    dispatch(
-      addProductStart({
-        productCategory,
-        productName,
-        productThumbnail,
-        productPrice,
-        productDesc,
-      })
-    );
+    if (selAction === "edit") {
+      //
+      dispatch(
+        updateProductStart({
+          productCategory,
+          productName,
+          productThumbnail,
+          productPrice,
+          productDesc,
+          selProductId,
+        })
+      );
+    } else {
+      dispatch(
+        addProductStart({
+          productCategory,
+          productName,
+          productThumbnail,
+          productPrice,
+          productDesc,
+        })
+      );
+    }
+
     resetAddProductForm();
   };
   const handleAddCategorySubmit = (e) => {
@@ -134,7 +165,7 @@ const Admin = (props) => {
         <ul>
           {Array.isArray(categories.data) && categories.data.length > 0 && (
             <li>
-              <Button onClick={() => toggleAddProductModal()}>
+              <Button onClick={() => toggleAddProductModal("add")}>
                 <AddIcon className="add-icon" />
                 New product
               </Button>
@@ -148,16 +179,17 @@ const Admin = (props) => {
             </Button>
           </li>
         </ul>
-        {}
       </div>
 
       <Modal {...configAddProductModal}>
         <div className="addNewProductForm">
           <form onSubmit={handleAddProductSubmit}>
-            <h2>Add new product</h2>
+            {selAction === "add" && <h2>Add new product</h2>}
+            {selAction === "edit" && <h2>Edit product</h2>}
             <Divider />
             <FormSelect
               label="Category"
+              defaultValue={productCategory.id}
               options={[
                 {
                   name: "- Select Category",
@@ -206,10 +238,14 @@ const Admin = (props) => {
             />
             <h3>Product details</h3>
             <CKEditor
+              initData={productDesc}
               onChange={(evt) => setProductDesc(evt.editor.getData())}
             />
             <br />
-            <Button type="submit">Add product</Button>
+            {selAction === "add" && <Button type="submit">Add product</Button>}
+            {selAction === "edit" && (
+              <Button type="submit">Update product</Button>
+            )}
           </form>
         </div>
       </Modal>
@@ -332,6 +368,13 @@ const Admin = (props) => {
                                   <IconButton
                                     className="action-button"
                                     aria-label="edit"
+                                    onClick={() =>
+                                      toggleAddProductModal(
+                                        "edit",
+                                        product,
+                                        documentID
+                                      )
+                                    }
                                   >
                                     <EditIcon className="action-icons edit-icon" />
                                   </IconButton>

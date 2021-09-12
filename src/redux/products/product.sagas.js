@@ -10,6 +10,7 @@ import {
 } from "./product.actions";
 import {
   handleAddProduct,
+  handleUpdateProduct,
   handleFetchProducts,
   handleFetchProduct,
   handleDeleteProduct,
@@ -38,6 +39,22 @@ export function* onAddProductStart() {
   yield takeLatest(productTypes.ADD_NEW_PRODUCT_START, addProduct);
 }
 
+export function* updateProduct({ payload }) {
+  try {
+    console.log("updateProduct payload: ", payload);
+    const timestamp = new Date();
+    yield handleUpdateProduct({
+      ...payload,
+      productAdminUserUID: auth.currentUser.uid,
+      updatedDate: timestamp,
+    });
+    yield put(fetchProductsStart());
+  } catch (err) {}
+}
+
+export function* onUpdateProductStart() {
+  yield takeLatest(productTypes.UPDATE_PRODUCT_START, updateProduct);
+}
 export function* fetchProducts({ payload }) {
   try {
     const products = yield handleFetchProducts(payload);
@@ -140,6 +157,7 @@ export function* onFetchCategoryStart() {
 export default function* productsSagas() {
   yield all([
     call(onAddProductStart),
+    call(onUpdateProductStart),
     call(onFetchProductsStart),
     call(onDeleteProductStart),
     call(onFetchProductStart),

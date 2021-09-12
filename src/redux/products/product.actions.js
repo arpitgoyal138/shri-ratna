@@ -4,7 +4,10 @@ export const addProductStart = (productData) => ({
   type: productsTypes.ADD_NEW_PRODUCT_START,
   payload: productData,
 });
-
+export const updateProductStart = (productData) => ({
+  type: productsTypes.UPDATE_PRODUCT_START,
+  payload: productData,
+});
 export const fetchProductsStart = (filters = {}) => ({
   type: productsTypes.FETCH_PRODUCTS_START,
   payload: filters,

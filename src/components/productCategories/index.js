@@ -51,8 +51,6 @@ const ProductCategories = () => {
       resetAddCategoryForm();
     }
     setHideAddCategoryModal(!hideAddCategoryModal);
-
-    //
   };
 
   const configAddCategoryModal = {

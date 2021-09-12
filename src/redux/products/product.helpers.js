@@ -14,7 +14,35 @@ export const handleAddProduct = (product) => {
       });
   });
 };
-
+export const handleUpdateProduct = (payload) => {
+  console.log("handleUpdateProduct:", payload);
+  const {
+    productName,
+    productDesc,
+    productPrice,
+    productThumbnail,
+    productCategory,
+    selProductId,
+  } = payload;
+  return new Promise((resolve, reject) => {
+    firestore
+      .collection("products")
+      .doc(selProductId)
+      .update({
+        productName,
+        productDesc,
+        productPrice,
+        productThumbnail,
+        productCategory,
+      })
+      .then(() => {
+        resolve();
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
 export const handleFetchProducts = ({
   filterType,
   startAfterDoc,
