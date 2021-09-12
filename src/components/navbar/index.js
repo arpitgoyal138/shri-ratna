@@ -5,9 +5,10 @@ import "./styles.scss";
 import { useSelector, useDispatch } from "react-redux";
 
 import { signOutUserStart } from "./../../redux/user/user.actions";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import MenuIcon from "@material-ui/icons/Menu";
 import CloseIcon from "@material-ui/icons/Close";
+
 const mapState = ({ user }) => ({
   currentUser: user.currentUser,
 });
@@ -27,11 +28,11 @@ export default function Navbar() {
   };
   return (
     <nav className="navbarItems">
-      <a href="/">
+      <Link to="/">
         <h1 className="navbar-logo">
           श्री रत्न भण्डार <i className="fab fa-react"></i>
         </h1>
-      </a>
+      </Link>
 
       <button className="menu-icon" onClick={toggleMenu}>
         {isMenuOpen && <CloseIcon className="mui-icon" />}
@@ -41,9 +42,9 @@ export default function Navbar() {
         {WebsiteMenuItems.map((item, index) => {
           return (
             <li key={index}>
-              <a className={item.clsName} href={item.url}>
+              <Link className={item.clsName} to={item.url}>
                 {item.title}
-              </a>
+              </Link>
             </li>
           );
         })}

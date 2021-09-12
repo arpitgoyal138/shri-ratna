@@ -16,11 +16,10 @@ import Divider from "@material-ui/core/Divider";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import MailIcon from "@material-ui/icons/Mail";
 import { useSelector, useDispatch } from "react-redux";
 
 import { signOutUserStart } from "./../../redux/user/user.actions";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,6 +39,10 @@ const useStyles = makeStyles((theme) => ({
   },
   menuItemLink: {
     color: "darkslategray",
+  },
+  muiMenuIcon: {
+    fontSize: "1.2rem",
+    minWidth: "35px",
   },
   muiIcon: {
     fontSize: "2rem",
@@ -110,14 +113,14 @@ export default function AdminNavbar() {
               >
                 <List>
                   {AdminMenuItems.map((item, index) => (
-                    <a className={classes.menuItemLink} href={item.url}>
+                    <Link className={classes.menuItemLink} to={item.url}>
                       <ListItem button key={index}>
-                        <ListItemIcon className={classes.muiIcon}>
-                          {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                        <ListItemIcon className={classes.muiMenuIcon}>
+                          <i className={item.icon}></i>
                         </ListItemIcon>
                         <ListItemText primary={item.title} />
                       </ListItem>
-                    </a>
+                    </Link>
                   ))}
                 </List>
               </div>
@@ -156,13 +159,6 @@ export default function AdminNavbar() {
                 <MenuItem onClick={handleClose}>Profile</MenuItem>
                 <MenuItem onClick={handleClose}>My account</MenuItem>
                 <MenuItem onClick={signOut}>Logout</MenuItem>
-                {/* {AdminMenuItems.map((item, index) => {
-                  return (
-                    <MenuItem key={index} onClick={handleClose}>
-                      {item.title}
-                    </MenuItem>
-                  );
-                })} */}
               </Menu>
             </div>
           }

@@ -1,11 +1,23 @@
 import { auth } from "./../../firebase/utils";
 import { takeLatest, put, all, call } from "redux-saga/effects";
-import { setProducts, setProduct, fetchProductsStart } from "./product.actions";
+import {
+  setProducts,
+  setProduct,
+  fetchProductsStart,
+  setCategories,
+  setCategory,
+  fetchCategoriesStart,
+} from "./product.actions";
 import {
   handleAddProduct,
   handleFetchProducts,
   handleFetchProduct,
   handleDeleteProduct,
+  handleAddCategory,
+  handleUpdateCategory,
+  handleFetchCategories,
+  handleFetchCategory,
+  handleDeleteCategory,
 } from "./product.helpers";
 import productTypes from "./product.types";
 
@@ -19,9 +31,7 @@ export function* addProduct({ payload }) {
       createdDate: timestamp,
     });
     yield put(fetchProductsStart());
-  } catch (err) {
-    // console.log(err);
-  }
+  } catch (err) {}
 }
 
 export function* onAddProductStart() {
@@ -32,9 +42,7 @@ export function* fetchProducts({ payload }) {
   try {
     const products = yield handleFetchProducts(payload);
     yield put(setProducts(products));
-  } catch (err) {
-    // console.log(err);
-  }
+  } catch (err) {}
 }
 
 export function* onFetchProductsStart() {
@@ -45,9 +53,7 @@ export function* deleteProduct({ payload }) {
   try {
     yield handleDeleteProduct(payload);
     yield put(fetchProductsStart());
-  } catch (err) {
-    // console.log(err);
-  }
+  } catch (err) {}
 }
 
 export function* onDeleteProductStart() {
@@ -58,13 +64,77 @@ export function* fetchProduct({ payload }) {
   try {
     const product = yield handleFetchProduct(payload);
     yield put(setProduct(product));
-  } catch (err) {
-    // console.log(err);
-  }
+  } catch (err) {}
 }
 
 export function* onFetchProductStart() {
   yield takeLatest(productTypes.FETCH_PRODUCT_START, fetchProduct);
+}
+
+////////////////// Categories //////////////////
+
+export function* addCategory({ payload }) {
+  try {
+    console.log("addCategory payload: ", payload);
+    const timestamp = new Date();
+    yield handleAddCategory({
+      ...payload,
+      categoryAdminUserUID: auth.currentUser.uid,
+      createdDate: timestamp,
+    });
+    yield put(fetchCategoriesStart());
+  } catch (err) {}
+}
+
+export function* onAddCategoryStart() {
+  yield takeLatest(productTypes.ADD_NEW_CATEGORY_START, addCategory);
+}
+
+export function* updateCategory({ payload }) {
+  try {
+    console.log("updateCategory payload: ", payload);
+    yield handleUpdateCategory({
+      ...payload,
+    });
+    yield put(fetchCategoriesStart());
+  } catch (err) {}
+}
+
+export function* onUpdateCategoryStart() {
+  yield takeLatest(productTypes.UPDATE_CATEGORY_START, updateCategory);
+}
+
+export function* fetchCategories({ payload }) {
+  try {
+    const categories = yield handleFetchCategories(payload);
+    yield put(setCategories(categories));
+  } catch (err) {}
+}
+
+export function* onFetchCategoriesStart() {
+  yield takeLatest(productTypes.FETCH_CATEGORIES_START, fetchCategories);
+}
+
+export function* deleteCategory({ payload }) {
+  try {
+    yield handleDeleteCategory(payload);
+    yield put(fetchCategoriesStart());
+  } catch (err) {}
+}
+
+export function* onDeleteCategoryStart() {
+  yield takeLatest(productTypes.DELETE_CATEGORY_START, deleteCategory);
+}
+
+export function* fetchCategory({ payload }) {
+  try {
+    const category = yield handleFetchCategory(payload);
+    yield put(setCategory(category));
+  } catch (err) {}
+}
+
+export function* onFetchCategoryStart() {
+  yield takeLatest(productTypes.FETCH_CATEGORY_START, fetchCategory);
 }
 
 export default function* productsSagas() {
@@ -73,5 +143,10 @@ export default function* productsSagas() {
     call(onFetchProductsStart),
     call(onDeleteProductStart),
     call(onFetchProductStart),
+    call(onAddCategoryStart),
+    call(onUpdateCategoryStart),
+    call(onFetchCategoriesStart),
+    call(onDeleteCategoryStart),
+    call(onFetchCategoriesStart),
   ]);
 }

@@ -1,8 +1,7 @@
 // react libraries
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-
 // Pages
 import ProductDetail from "./pages/ProductDetail";
 import Admin from "./pages/Admin";
@@ -10,6 +9,7 @@ import Registration from "./pages/Registration";
 import Recovery from "./pages/Recovery";
 import Login from "./pages/Login";
 import Home from "./pages/Homepage";
+import Categories from "./pages/Categories";
 
 // components
 import AdminToolbar from "./components/adminToolbar";
@@ -36,6 +36,7 @@ const mapState = ({ user }) => ({
 });
 const App = (props) => {
   const { loading } = useSelector(mapState);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -82,6 +83,16 @@ const App = (props) => {
             <WithAdminAuth>
               <AdminPageLayout>
                 <Admin />
+              </AdminPageLayout>
+            </WithAdminAuth>
+          )}
+        />
+        <Route
+          path="/categories"
+          render={() => (
+            <WithAdminAuth>
+              <AdminPageLayout>
+                <Categories />
               </AdminPageLayout>
             </WithAdminAuth>
           )}

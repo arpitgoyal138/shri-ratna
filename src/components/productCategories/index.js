@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  addProductStart,
-  fetchProductsStart,
-  deleteProductStart,
+  deleteCategoryStart,
   addCategoryStart,
   fetchCategoriesStart,
-} from "./../../redux/products/product.actions";
-import Modal from "./../../components/modal";
-import FormInput from "./../../components/forms/FormInput";
-import FormSelect from "./../../components/forms/FormSelect";
-import Button from "./../../components/forms/Button";
-import LoadMore from "./../../components/loadMore";
-import { CKEditor } from "ckeditor4-react";
+  updateCategoryStart,
+} from "../../redux/products/product.actions";
+import Modal from "../modal";
+import FormInput from "../forms/FormInput";
+import FormSelect from "../forms/FormSelect";
+import Button from "../forms/Button";
+import LoadMore from "../loadMore";
 import "./styles.scss";
 import { Divider, Tooltip } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
@@ -22,90 +20,77 @@ import IconButton from "@material-ui/core/IconButton";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 
 const mapState = ({ productsData }) => ({
-  products: productsData.products,
   categories: productsData.categories,
 });
 
-const Admin = (props) => {
-  const { products, categories } = useSelector(mapState);
+const ProductCategories = () => {
+  const { categories } = useSelector(mapState);
   const dispatch = useDispatch();
-  const [hideAddProductModal, setHideAddProductModal] = useState(true);
   const [hideAddCategoryModal, setHideAddCategoryModal] = useState(true);
-  const [productCategory, setProductCategory] = useState("");
-  const [productName, setProductName] = useState("");
-  const [productThumbnail, setProductThumbnail] = useState("");
-  const [productPrice, setProductPrice] = useState(0);
-  const [productDesc, setProductDesc] = useState("");
   const [categoryName, setCategoryName] = useState("");
-  const [parent, setParent] = useState({
-    id: "",
-    name: "",
-  });
+  const [parent, setParent] = useState({ id: "", name: "" });
+  const [selAction, setSelAction] = useState("add");
+  const [selCategoryId, setSelCategoryId] = useState("");
+  const { data, queryDoc, isLastPage } = categories;
 
-  const { data, queryDoc, isLastPage } = products;
   useEffect(() => {
-    dispatch(fetchProductsStart());
     dispatch(fetchCategoriesStart());
   }, []);
-
-  const toggleAddProductModal = () =>
-    setHideAddProductModal(!hideAddProductModal);
-
-  const configAddProductModal = {
-    hideModal: hideAddProductModal,
-    toggleModal: toggleAddProductModal,
-  };
-
-  const toggleAddCategoryModal = () =>
+  const toggleAddCategoryModal = (
+    action,
+    currentParent,
+    documentID,
+    currentCategory
+  ) => {
+    console.log("currentParent: ", currentParent);
+    setSelAction(action);
+    if (action === "edit") {
+      setCategoryName(currentCategory);
+      setParent(currentParent);
+      setSelCategoryId(documentID);
+    } else {
+      resetAddCategoryForm();
+    }
     setHideAddCategoryModal(!hideAddCategoryModal);
+
+    //
+  };
 
   const configAddCategoryModal = {
     hideModal: hideAddCategoryModal,
     toggleModal: toggleAddCategoryModal,
   };
-
-  const resetAddProductForm = () => {
-    setHideAddProductModal(true);
-    setProductCategory("Category-1");
-    setProductName("");
-    setProductThumbnail("");
-    setProductPrice(0);
-    setProductDesc("");
-  };
   const resetAddCategoryForm = () => {
     setHideAddCategoryModal(true);
     setParent({ id: "", name: "" });
     setCategoryName("");
+    setSelCategoryId("");
   };
-  const handleAddProductSubmit = (e) => {
+  const handleActionOnCategorySubmit = (e) => {
     e.preventDefault();
-    dispatch(
-      addProductStart({
-        productCategory,
-        productName,
-        productThumbnail,
-        productPrice,
-        productDesc,
-      })
-    );
-    resetAddProductForm();
-  };
-  const handleAddCategorySubmit = (e) => {
-    e.preventDefault();
-
-    dispatch(
-      addCategoryStart({
-        parent,
-        categoryName,
-      })
-    );
+    if (selAction === "add") {
+      dispatch(
+        addCategoryStart({
+          parent,
+          categoryName,
+        })
+      );
+    } else {
+      dispatch(
+        updateCategoryStart({
+          selCategoryId,
+          parent,
+          categoryName,
+        })
+      );
+    }
     resetAddCategoryForm();
   };
   const handleLoadMore = () => {
     dispatch(
-      fetchProductsStart({
+      fetchCategoriesStart({
         startAfterDoc: queryDoc,
-        persistProducts: data,
+        persistCategories: data,
       })
     );
   };
@@ -113,12 +98,11 @@ const Admin = (props) => {
   const configLoadMore = {
     onLoadMoreEvt: handleLoadMore,
   };
-
   let categoriesArr = [];
 
-  Array.isArray(categories.data) &&
-    categories.data.length > 0 &&
-    categories.data.map((category, index) => {
+  Array.isArray(data) &&
+    data.length > 0 &&
+    data.map((category, index) => {
       categoriesArr[index] = {
         name: category.categoryName,
         value: category.documentID,
@@ -129,82 +113,25 @@ const Admin = (props) => {
     <div className="admin">
       <div className="callToActions">
         <ul>
-          {Array.isArray(categories.data) && categories.data.length > 0 && (
-            <li>
-              <Button onClick={() => toggleAddProductModal()}>
-                <AddIcon className="add-icon" />
-                New product
-              </Button>
-            </li>
-          )}
           <li>
-            <Button onClick={() => toggleAddCategoryModal()}>
+            <Button onClick={() => toggleAddCategoryModal("add")}>
               <AddIcon className="add-icon" />
               New category
-              {/* ({Array.isArray(categories.data) && categories.data.length}) */}
+              {/* ({Array.isArray(data) && data.length}) */}
             </Button>
           </li>
         </ul>
         {}
       </div>
 
-      <Modal {...configAddProductModal}>
-        <div className="addNewProductForm">
-          <form onSubmit={handleAddProductSubmit}>
-            <h2>Add new product</h2>
-            <Divider />
-            <FormSelect
-              label="Category"
-              options={[
-                {
-                  name: "- Select Category",
-                  value: "",
-                },
-                ...categoriesArr,
-              ]}
-              required
-              handleChange={(e) => setProductCategory(e.target.value)}
-            />
-            <FormInput
-              label="Title"
-              type="text"
-              value={productName}
-              handleChange={(e) => setProductName(e.target.value)}
-              required
-            />
-            <FormInput
-              label="Main image URL"
-              type="url"
-              value={productThumbnail}
-              handleChange={(e) => setProductThumbnail(e.target.value)}
-            />
-            <FormInput
-              label="Price"
-              type="number"
-              min="0.00"
-              max="10000.00"
-              step="0.01"
-              value={productPrice}
-              handleChange={(e) => setProductPrice(e.target.value)}
-              required
-            />
-            <h3>Product details</h3>
-            <CKEditor
-              onChange={(evt) => setProductDesc(evt.editor.getData())}
-            />
-            <br />
-            <Button type="submit">Add product</Button>
-          </form>
-        </div>
-      </Modal>
-
       <Modal {...configAddCategoryModal}>
         <div className="addNewCategoryForm">
-          <form onSubmit={handleAddCategorySubmit}>
+          <form onSubmit={handleActionOnCategorySubmit}>
             <h2>Add new category</h2>
             <Divider />
-            {Array.isArray(categories.data) && categories.data.length > 0 && (
+            {Array.isArray(data) && data.length > 0 && (
               <FormSelect
+                defaultValue={parent.id}
                 label="Parent Category (if any)"
                 options={[
                   {
@@ -239,18 +166,21 @@ const Admin = (props) => {
             />
             <br />
 
-            <Button type="submit">Add category</Button>
+            {selAction === "add" && <Button type="submit">Add category</Button>}
+            {selAction === "edit" && (
+              <Button type="submit">Update category</Button>
+            )}
           </form>
         </div>
       </Modal>
 
       {Array.isArray(data) && data.length > 0 && (
-        <div className="manageProducts">
+        <div className="manageCategories">
           <table border="0" cellPadding="10" cellSpacing="10">
             <tbody>
               <tr>
                 <th>
-                  <h1>Manage Products</h1>
+                  <h1>Manage Categories</h1>
                 </th>
               </tr>
 
@@ -263,38 +193,26 @@ const Admin = (props) => {
                     cellSpacing="0"
                   >
                     <tr className="table_heading">
-                      <th>Image</th>
                       <th>Title</th>
-                      <th>Category</th>
-                      <th>Price</th>
+                      <th>Parent Category</th>
                       {/* <th>Created at</th> */}
                       <th>Actions</th>
                     </tr>
                     <tbody>
                       {Array.isArray(data) &&
                         data.length > 0 &&
-                        data.map((product, index) => {
+                        data.map((category, index) => {
                           const {
-                            productName,
-                            productThumbnail,
-                            productPrice,
+                            categoryName,
                             documentID,
                             // createdDate,
-                            productCategory,
-                          } = product;
+                            parent,
+                          } = category;
 
                           return (
                             <tr key={index}>
-                              <td>
-                                <img
-                                  className="thumb"
-                                  src={productThumbnail}
-                                  alt="product thumbnail"
-                                />
-                              </td>
-                              <td>{productName}</td>
-                              <td>{productCategory}</td>
-                              <td>Rs. {productPrice}</td>
+                              <td>{categoryName}</td>
+                              <td>{parent.name}</td>
                               {/* <td>
                               {createdDate.toDate().toDateString()}{" "}
                               {createdDate.toDate().toLocaleTimeString()}
@@ -302,7 +220,7 @@ const Admin = (props) => {
 
                               <td>
                                 <Tooltip
-                                  title="Hide the product from website"
+                                  title="Hide the category from website"
                                   aria-label="Visibility"
                                 >
                                   <IconButton
@@ -312,12 +230,25 @@ const Admin = (props) => {
                                     <VisibilityIcon className="action-icons eye-icon" />
                                   </IconButton>
                                 </Tooltip>
-                                <Tooltip title="Edit product" aria-label="edit">
+                                <Tooltip
+                                  title="Edit category"
+                                  aria-label="edit"
+                                >
                                   <IconButton
                                     className="action-button"
                                     aria-label="edit"
                                   >
-                                    <EditIcon className="action-icons edit-icon" />
+                                    <EditIcon
+                                      className="action-icons edit-icon"
+                                      onClick={() =>
+                                        toggleAddCategoryModal(
+                                          "edit",
+                                          parent,
+                                          documentID,
+                                          categoryName
+                                        )
+                                      }
+                                    />
                                   </IconButton>
                                 </Tooltip>
                                 <Tooltip title="Delete">
@@ -328,7 +259,9 @@ const Admin = (props) => {
                                     <DeleteIcon
                                       className="action-icons delete-icon"
                                       onClick={() =>
-                                        dispatch(deleteProductStart(documentID))
+                                        dispatch(
+                                          deleteCategoryStart(documentID)
+                                        )
                                       }
                                     />
                                   </IconButton>
@@ -365,4 +298,4 @@ const Admin = (props) => {
   );
 };
 
-export default Admin;
+export default ProductCategories;
