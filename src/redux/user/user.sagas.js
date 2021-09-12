@@ -17,6 +17,7 @@ import {
 import { handleRecoverPasswordAPI } from "./user.helpers";
 
 export function* getSnapshotFromUserAuth(user, additionalData = {}) {
+  console.log("snapshot from user auth:", user);
   try {
     yield put(isLoading(true));
     const userRef = yield call(handleUserProfile, {
@@ -26,6 +27,7 @@ export function* getSnapshotFromUserAuth(user, additionalData = {}) {
     const snapshot = yield userRef.get();
     yield put(signInSuccess({ uid: snapshot.id, ...snapshot.data() }));
   } catch (err) {
+    console.log("err:", err.message);
     yield put(isLoading(false));
   }
 }

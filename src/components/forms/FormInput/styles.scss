@@ -9,14 +9,23 @@
     text-align: left;
     padding: 5px 5px;
     margin: 10px auto;
-    border: 1px solid #9e9e9e;
+    border: 1px solid var(--primaryColorDark);
     outline: none;
   }
 }
+
 .MuiOutlinedInput-input {
   padding: 16.5px 14px !important;
 }
-
+.MuiFormLabel-root {
+  .Mui-focused {
+    color: var(--primaryColorDark);
+  }
+}
+.MuiInputLabel-outlined {
+  outline-color: var(--primaryColorDark) !important;
+  color: var(--primaryColorDark) !important;
+}
 @media screen and (max-width: 480px) {
   .MuiOutlinedInput-input {
     padding: 10px !important;

@@ -31,7 +31,10 @@ const Admin = (props) => {
   const dispatch = useDispatch();
   const [hideAddProductModal, setHideAddProductModal] = useState(true);
   const [hideAddCategoryModal, setHideAddCategoryModal] = useState(true);
-  const [productCategory, setProductCategory] = useState("");
+  const [productCategory, setProductCategory] = useState({
+    id: "",
+    name: "",
+  });
   const [productName, setProductName] = useState("");
   const [productThumbnail, setProductThumbnail] = useState("");
   const [productPrice, setProductPrice] = useState(0);
@@ -66,7 +69,7 @@ const Admin = (props) => {
 
   const resetAddProductForm = () => {
     setHideAddProductModal(true);
-    setProductCategory("Category-1");
+    setProductCategory({ id: "", name: "" });
     setProductName("");
     setProductThumbnail("");
     setProductPrice(0);
@@ -163,7 +166,20 @@ const Admin = (props) => {
                 ...categoriesArr,
               ]}
               required
-              handleChange={(e) => setProductCategory(e.target.value)}
+              handleChange={(e) => {
+                let index = e.nativeEvent.target.selectedIndex;
+                if (e.target.value !== "") {
+                  setProductCategory({
+                    id: e.target.value,
+                    name: e.target[index].text,
+                  });
+                } else {
+                  setProductCategory({
+                    id: "",
+                    name: "",
+                  });
+                }
+              }}
             />
             <FormInput
               label="Title"
@@ -245,7 +261,7 @@ const Admin = (props) => {
       </Modal>
 
       {Array.isArray(data) && data.length > 0 && (
-        <div className="manageProducts">
+        <div className="itemsPanel">
           <table border="0" cellPadding="10" cellSpacing="10">
             <tbody>
               <tr>
@@ -293,7 +309,7 @@ const Admin = (props) => {
                                 />
                               </td>
                               <td>{productName}</td>
-                              <td>{productCategory}</td>
+                              <td>{productCategory.name}</td>
                               <td>Rs. {productPrice}</td>
                               {/* <td>
                               {createdDate.toDate().toDateString()}{" "}

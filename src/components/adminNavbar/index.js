@@ -47,6 +47,9 @@ const useStyles = makeStyles((theme) => ({
   muiIcon: {
     fontSize: "2rem",
   },
+  muiHeaderBgColor: {
+    backgroundColor: "var(--primaryColorDark)",
+  },
 }));
 const mapState = ({ user }) => ({
   currentUser: user.currentUser,
@@ -86,7 +89,7 @@ export default function AdminNavbar() {
 
   return (
     <div className={classes.root}>
-      <AppBar position="fixed">
+      <AppBar className={classes.muiHeaderBgColor} position="fixed">
         <Toolbar>
           <React.Fragment>
             <IconButton

@@ -1,5 +1,5 @@
 // react libraries
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 // Pages
@@ -29,6 +29,8 @@ import WithAdminAuth from "./hoc/withAdminAuth";
 
 // stylesheets
 import "./App.scss";
+import "./assets/css/_globals.scss";
+
 // Material UI
 import CircularProgress from "@material-ui/core/CircularProgress";
 const mapState = ({ user }) => ({

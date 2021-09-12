@@ -1,13 +1,13 @@
 .err_list {
   font-size: 1.2rem;
-  color: red;
+  color: var(--primaryColorError);
   list-style: none;
   text-align: center;
 }
 
 .success_list {
   font-size: 1.3rem;
-  color: darkgreen;
+  color: var(--primaryColorSuccess);
   list-style: none;
   text-align: center;
 }
@@ -23,7 +23,7 @@
   outline: none;
   cursor: pointer;
   background: #fff;
-  color: #3f51b5;
+  color: var(--primaryColorDark);
   border: solid 1px;
   font-weight: 400;
   transition: 0.3s;
@@ -47,7 +47,7 @@
 }
 .avatar {
   margin: 8px;
-  background-color: #3f51b5;
+  background-color: var(--primaryColorDark);
 }
 
 .children {

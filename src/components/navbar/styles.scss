@@ -10,6 +10,7 @@ a {
   //     rgb(73, 63, 252) 100%
   //   );
   background: linear-gradient(90deg, #2525259e 0%, #000000 100%);
+
   justify-content: center;
   display: flex;
   font-size: 1.2rem;
@@ -115,7 +116,7 @@ a {
     position: absolute;
     top: 0;
     left: 0;
-    transform: translate(25%, 25%);
+    transform: translate(20%, 25%);
   }
   .menu-icon {
     display: block;

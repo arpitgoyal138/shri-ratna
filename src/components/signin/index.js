@@ -69,7 +69,6 @@ const Signin = () => {
           name="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          autoFocus
           required
         />
         <FormInput

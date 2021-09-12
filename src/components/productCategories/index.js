@@ -11,7 +11,7 @@ import FormInput from "../forms/FormInput";
 import FormSelect from "../forms/FormSelect";
 import Button from "../forms/Button";
 import LoadMore from "../loadMore";
-import "./styles.scss";
+import "../../pages/Admin/styles.scss";
 import { Divider, Tooltip } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -42,7 +42,6 @@ const ProductCategories = () => {
     documentID,
     currentCategory
   ) => {
-    console.log("currentParent: ", currentParent);
     setSelAction(action);
     if (action === "edit") {
       setCategoryName(currentCategory);
@@ -175,7 +174,7 @@ const ProductCategories = () => {
       </Modal>
 
       {Array.isArray(data) && data.length > 0 && (
-        <div className="manageCategories">
+        <div className="itemsPanel">
           <table border="0" cellPadding="10" cellSpacing="10">
             <tbody>
               <tr>

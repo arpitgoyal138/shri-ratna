@@ -4,8 +4,8 @@
   font-size: 1rem;
   font-weight: 300;
   text-transform: uppercase;
-  color: #efefef;
-  background: #3f51b5;
+  color: var(--primaryColorLight);
+  background: var(--primaryColorDark);
   padding: 10px;
   margin: 10px auto;
   border: 0;
@@ -13,7 +13,7 @@
   cursor: pointer;
   transition: 0.3s;
   &:hover {
-    background-color: #3949a2;
+    background-color: var(--primaryColorDarkOnHover);
   }
 }
 @media screen and (max-width: 480px) {

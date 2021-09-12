@@ -25,7 +25,7 @@ const AuthWrapper = ({ headline, children }) => {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className="paper">
-        <Avatar style={{ margin: "8px", backgroundColor: "#3f51b5" }}>
+        <Avatar style={{ margin: "8px", backgroundColor: "rgb(63 81 100)" }}>
           <LockOutlinedIcon />
         </Avatar>
         {headline && (
