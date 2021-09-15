@@ -5,7 +5,7 @@ import {
   addCategoryStart,
   fetchCategoriesStart,
   updateCategoryStart,
-} from "../../redux/products/product.actions";
+} from "./../../redux/categories/category.actions";
 import Modal from "../modal";
 import FormInput from "../forms/FormInput";
 import FormSelect from "../forms/FormSelect";
@@ -19,8 +19,8 @@ import EditIcon from "@material-ui/icons/Edit";
 import IconButton from "@material-ui/core/IconButton";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 
-const mapState = ({ productsData }) => ({
-  categories: productsData.categories,
+const mapState = ({ categoriesData }) => ({
+  categories: categoriesData.categories,
 });
 
 const ProductCategories = () => {

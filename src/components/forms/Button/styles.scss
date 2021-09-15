@@ -4,9 +4,9 @@
   font-size: 1rem;
   font-weight: 300;
   text-transform: uppercase;
+  padding: 10px;
   color: var(--primaryColorLight);
   background: var(--primaryColorDark);
-  padding: 10px;
   margin: 10px auto;
   border: 0;
   outline: none;
@@ -19,6 +19,5 @@
 @media screen and (max-width: 480px) {
   .btn {
     font-size: 0.85rem;
-    padding: 8px;
   }
 }

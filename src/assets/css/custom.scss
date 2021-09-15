@@ -15,9 +15,9 @@
 .social_btn {
   display: block;
   width: 100%;
-  font-size: 1.2rem;
+  font-size: 1rem;
   line-height: 1;
-  padding: 12px 10px;
+  padding: 10px;
   margin: 10px auto;
   border: 0;
   outline: none;
@@ -27,6 +27,8 @@
   border: solid 1px;
   font-weight: 400;
   transition: 0.3s;
+  text-transform: uppercase;
+
   &:hover {
     background-color: #fafafb;
   }
@@ -57,7 +59,7 @@
 
 @media screen and (max-width: 480px) {
   .social_btn {
-    font-size: 1rem;
-    padding: 8px 5px;
+    font-size: 0.85rem;
+    padding: 10px 5px;
   }
 }

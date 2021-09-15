@@ -1,45 +1,61 @@
+// React Libraries
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
+// Redux Actions
 import {
   addProductStart,
   updateProductStart,
   fetchProductsStart,
   deleteProductStart,
+} from "./../../redux/products/product.actions";
+import {
   addCategoryStart,
   fetchCategoriesStart,
-} from "./../../redux/products/product.actions";
+} from "./../../redux/categories/category.actions";
+
+// Components
 import Modal from "./../../components/modal";
 import FormInput from "./../../components/forms/FormInput";
 import FormSelect from "./../../components/forms/FormSelect";
 import Button from "./../../components/forms/Button";
 import LoadMore from "./../../components/loadMore";
+import FileUpload from "../../components/forms/FileUpload";
 import { CKEditor } from "ckeditor4-react";
+
 import "./styles.scss";
+
+// Material UI
 import { Divider, Tooltip } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import IconButton from "@material-ui/core/IconButton";
 import VisibilityIcon from "@material-ui/icons/Visibility";
+import { Paper } from "@material-ui/core";
+import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 
-const mapState = ({ productsData }) => ({
+// Firebase
+import { storage } from "../../firebase/utils";
+
+// Schemas
+import { productSchema } from "../../components/schemas/product";
+
+// Assets
+import AddProductImage from "./../../assets/images/placeholders/add-product.jpg";
+
+const mapState = ({ productsData, categoriesData }) => ({
   products: productsData.products,
-  categories: productsData.categories,
+  categories: categoriesData.categories,
 });
 
 const Admin = (props) => {
   const { products, categories } = useSelector(mapState);
   const dispatch = useDispatch();
+  // States
   const [hideAddProductModal, setHideAddProductModal] = useState(true);
   const [hideAddCategoryModal, setHideAddCategoryModal] = useState(true);
-  const [productCategory, setProductCategory] = useState({
-    id: "",
-    name: "",
-  });
-  const [productName, setProductName] = useState("");
-  const [productThumbnail, setProductThumbnail] = useState("");
-  const [productPrice, setProductPrice] = useState(0);
-  const [productDesc, setProductDesc] = useState("");
+  const [product, setProduct] = useState(productSchema);
   const [categoryName, setCategoryName] = useState("");
   const [parent, setParent] = useState({
     id: "",
@@ -47,36 +63,97 @@ const Admin = (props) => {
   });
   const [selProductId, setSelProductId] = useState("");
   const [selAction, setSelAction] = useState("");
+  const [image, setImage] = useState(null);
+  const [progress, setProgress] = useState(0);
+  //
   const { data, queryDoc, isLastPage } = products;
   useEffect(() => {
     dispatch(fetchProductsStart());
     dispatch(fetchCategoriesStart());
   }, []);
 
+  const handleImageChange = (e) => {
+    setProgress(0);
+    const upImage = e.target.files[0];
+    if (upImage) {
+      console.log("image:", upImage);
+      setImage(upImage);
+      handleFileUpload({
+        path: "images/products/",
+        file: upImage,
+      });
+    }
+  };
+  const handleFileUpload = ({ path, file }) => {
+    const uploadTask = storage.ref(`${path}/${file.name}`).put(file);
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const prog = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
+        setProgress(prog);
+      },
+      (error) => {
+        console.log("file upload error:", error.message);
+      },
+      () => {
+        storage
+          .ref(`${path}`)
+          .child(file.name)
+          .getDownloadURL()
+          .then((fileUrl) => {
+            console.log("url:", fileUrl);
+            setProduct((prevState) => ({
+              ...prevState,
+              productImages: [
+                ...prevState.productImages,
+                { name: file.name, url: fileUrl },
+              ],
+            }));
+            console.log("Product: ", product);
+          });
+      }
+    );
+  };
+  const handleDeleteFile = (fileName) => {
+    console.log("delete file:", fileName);
+    storage
+      .ref(`images/products/`)
+      .child(fileName)
+      .delete()
+      .then(() => {
+        console.log("deleted successfully");
+        // Delete url from product
+        setProduct((prevState) => ({
+          ...prevState,
+          productImages: prevState.productImages.filter(
+            (state) => state.name !== fileName
+          ),
+        }));
+      })
+      .catch((err) => {
+        console.log("delete err:", err.message);
+      });
+  };
   const toggleAddProductModal = (action, currentProduct, documentID) => {
     console.log("currentProduct:", currentProduct);
     setSelAction(action);
     if (action === "edit") {
       setSelProductId(documentID);
-      setProductName(currentProduct.productName);
-      setProductPrice(currentProduct.productPrice);
-      setProductThumbnail(currentProduct.productThumbnail);
-      setProductDesc(currentProduct.productDesc);
-      setProductCategory(currentProduct.productCategory);
+      setProduct({ ...currentProduct });
     } else {
       resetAddProductForm();
     }
     setHideAddProductModal(!hideAddProductModal);
   };
-
+  const toggleAddCategoryModal = () => {
+    setHideAddCategoryModal(!hideAddCategoryModal);
+  };
   const configAddProductModal = {
     hideModal: hideAddProductModal,
     toggleModal: toggleAddProductModal,
   };
-
-  const toggleAddCategoryModal = () =>
-    setHideAddCategoryModal(!hideAddCategoryModal);
-
   const configAddCategoryModal = {
     hideModal: hideAddCategoryModal,
     toggleModal: toggleAddCategoryModal,
@@ -84,12 +161,8 @@ const Admin = (props) => {
 
   const resetAddProductForm = () => {
     setHideAddProductModal(true);
-    setProductCategory({ id: "", name: "" });
-    setProductName("");
-    setProductThumbnail("");
-    setProductPrice(0);
-    setProductDesc("");
     setSelProductId("");
+    setProduct(productSchema);
   };
   const resetAddCategoryForm = () => {
     setHideAddCategoryModal(true);
@@ -101,28 +174,33 @@ const Admin = (props) => {
     if (selAction === "edit") {
       //
       dispatch(
-        updateProductStart({
-          productCategory,
-          productName,
-          productThumbnail,
-          productPrice,
-          productDesc,
-          selProductId,
-        })
+        updateProductStart(
+          {
+            ...product,
+          },
+          selProductId
+        )
       );
     } else {
       dispatch(
         addProductStart({
-          productCategory,
-          productName,
-          productThumbnail,
-          productPrice,
-          productDesc,
+          ...product,
         })
       );
     }
 
     resetAddProductForm();
+  };
+  const handleVisibility = (visibility, documentID) => {
+    console.log("visibility: ", visibility, " docId:", documentID);
+    dispatch(
+      updateProductStart(
+        {
+          productVisible: visibility,
+        },
+        documentID
+      )
+    );
   };
   const handleAddCategorySubmit = (e) => {
     e.preventDefault();
@@ -189,7 +267,7 @@ const Admin = (props) => {
             <Divider />
             <FormSelect
               label="Category"
-              defaultValue={productCategory.id}
+              defaultValue={product.productCategory.id}
               options={[
                 {
                   name: "- Select Category",
@@ -201,45 +279,91 @@ const Admin = (props) => {
               handleChange={(e) => {
                 let index = e.nativeEvent.target.selectedIndex;
                 if (e.target.value !== "") {
-                  setProductCategory({
-                    id: e.target.value,
-                    name: e.target[index].text,
-                  });
+                  setProduct((prevState) => ({
+                    ...prevState,
+                    productCategory: {
+                      id: e.target.value,
+                      name: e.target[index].text,
+                    },
+                  }));
+                  console.log("Product: ", product);
                 } else {
-                  setProductCategory({
-                    id: "",
-                    name: "",
-                  });
+                  setProduct((prevState) => ({
+                    ...prevState,
+                    productCategory: { id: "", name: "" },
+                  }));
                 }
               }}
             />
             <FormInput
               label="Title"
               type="text"
-              value={productName}
-              handleChange={(e) => setProductName(e.target.value)}
+              value={product.productName}
+              handleChange={(e) =>
+                setProduct((prevState) => ({
+                  ...prevState,
+                  productName: e.target.value,
+                }))
+              }
               required
             />
-            <FormInput
-              label="Main image URL"
-              type="url"
-              value={productThumbnail}
-              handleChange={(e) => setProductThumbnail(e.target.value)}
-            />
+
             <FormInput
               label="Price"
               type="number"
               min="0.00"
               max="10000.00"
               step="0.01"
-              value={productPrice}
-              handleChange={(e) => setProductPrice(e.target.value)}
+              value={product.productPrice}
+              handleChange={(e) =>
+                setProduct((prevState) => ({
+                  ...prevState,
+                  productPrice: e.target.value,
+                }))
+              }
               required
             />
+            {product.productImages.map((img, index) => {
+              return (
+                <label className="uploaded-product" key={index}>
+                  <Paper
+                    style={{
+                      backgroundImage: `url(${img.url})`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                      height: "100%",
+                      width: "100%",
+                    }}
+                  >
+                    <Tooltip title="Delete">
+                      <IconButton className="action-button" aria-label="delete">
+                        <DeleteIcon
+                          className="action-icons delete-icon"
+                          onClick={() => handleDeleteFile(img.name)}
+                        />
+                      </IconButton>
+                    </Tooltip>
+                  </Paper>
+                </label>
+              );
+            })}
+
+            <FileUpload
+              handleChange={handleImageChange}
+              // bgImageSrc="https://via.placeholder.com/150"
+              bgImageSrc={AddProductImage}
+              upProgress={progress}
+            />
+
             <h3>Product details</h3>
             <CKEditor
-              initData={productDesc}
-              onChange={(evt) => setProductDesc(evt.editor.getData())}
+              initData={product.productDesc}
+              onChange={(evt) =>
+                setProduct((prevState) => ({
+                  ...prevState,
+                  productDesc: evt.editor.getData(),
+                }))
+              }
             />
             <br />
             {selAction === "add" && <Button type="submit">Add product</Button>}
@@ -322,26 +446,31 @@ const Admin = (props) => {
                       {/* <th>Created at</th> */}
                       <th>Actions</th>
                     </tr>
-                    <tbody>
+                    <tbody className="table_data">
                       {Array.isArray(data) &&
                         data.length > 0 &&
-                        data.map((product, index) => {
+                        data.map((item, index) => {
                           const {
                             productName,
-                            productThumbnail,
+                            productImages,
                             productPrice,
                             documentID,
                             // createdDate,
                             productCategory,
-                          } = product;
+                            productVisible,
+                          } = item;
 
                           return (
                             <tr key={index}>
                               <td>
                                 <img
                                   className="thumb"
-                                  src={productThumbnail}
-                                  alt="product thumbnail"
+                                  src={
+                                    productImages
+                                      ? productImages[0].url
+                                      : "https://via.placeholder.com/150"
+                                  }
+                                  alt="product"
                                 />
                               </td>
                               <td>{productName}</td>
@@ -354,14 +483,29 @@ const Admin = (props) => {
 
                               <td>
                                 <Tooltip
-                                  title="Hide the product from website"
+                                  title={
+                                    productVisible
+                                      ? "Hide the product from website"
+                                      : "Show the product on website"
+                                  }
                                   aria-label="Visibility"
                                 >
                                   <IconButton
                                     className="action-button"
                                     aria-label="Visibility"
+                                    onClick={(e) =>
+                                      handleVisibility(
+                                        !productVisible,
+                                        documentID
+                                      )
+                                    }
                                   >
-                                    <VisibilityIcon className="action-icons eye-icon" />
+                                    {productVisible && (
+                                      <VisibilityIcon className="action-icons eye-icon" />
+                                    )}
+                                    {!productVisible && (
+                                      <VisibilityOffIcon className="action-icons eye-icon" />
+                                    )}
                                   </IconButton>
                                 </Tooltip>
                                 <Tooltip title="Edit product" aria-label="edit">
@@ -371,7 +515,7 @@ const Admin = (props) => {
                                     onClick={() =>
                                       toggleAddProductModal(
                                         "edit",
-                                        product,
+                                        item,
                                         documentID
                                       )
                                     }

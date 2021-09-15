@@ -1,11 +1,11 @@
 import { firestore } from "../../firebase/utils";
 
-export const handleAddProduct = (product) => {
+export const handleAddCategory = (category) => {
   return new Promise((resolve, reject) => {
     firestore
-      .collection("products")
+      .collection("categories")
       .doc()
-      .set(product)
+      .set(category)
       .then(() => {
         resolve();
       })
@@ -14,13 +14,16 @@ export const handleAddProduct = (product) => {
       });
   });
 };
-export const handleUpdateProduct = ({ payload, documentID }) => {
-  console.log("handleUpdateProduct: ID=", documentID, " payload:", payload);
+export const handleUpdateCategory = (payload) => {
+  console.log("handleUpdateCategory:", payload);
   return new Promise((resolve, reject) => {
     firestore
-      .collection("products")
-      .doc(documentID)
-      .update(payload)
+      .collection("categories")
+      .doc(payload.selCategoryId)
+      .update({
+        parent: payload.parent,
+        categoryName: payload.categoryName,
+      })
       .then(() => {
         resolve();
       })
@@ -29,16 +32,17 @@ export const handleUpdateProduct = ({ payload, documentID }) => {
       });
   });
 };
-export const handleFetchProducts = ({
+
+export const handleFetchCategories = ({
   filterType,
   startAfterDoc,
-  persistProducts = [],
+  persistCategories = [],
 }) => {
   return new Promise((resolve, reject) => {
-    const pageSize = 6;
+    const pageSize = 100;
 
     let ref = firestore
-      .collection("products")
+      .collection("categories")
       .orderBy("createdDate")
       .limit(pageSize);
 
@@ -51,7 +55,7 @@ export const handleFetchProducts = ({
         const totalCount = snapshot.size;
 
         const data = [
-          ...persistProducts,
+          ...persistCategories,
           ...snapshot.docs.map((doc) => {
             return {
               ...doc.data(),
@@ -72,10 +76,10 @@ export const handleFetchProducts = ({
   });
 };
 
-export const handleDeleteProduct = (documentID) => {
+export const handleDeleteCategory = (documentID) => {
   return new Promise((resolve, reject) => {
     firestore
-      .collection("products")
+      .collection("categories")
       .doc(documentID)
       .delete()
       .then(() => {
@@ -87,17 +91,17 @@ export const handleDeleteProduct = (documentID) => {
   });
 };
 
-export const handleFetchProduct = (productID) => {
+export const handleFetchCategory = (categoryID) => {
   return new Promise((resolve, reject) => {
     firestore
-      .collection("products")
-      .doc(productID)
+      .collection("categories")
+      .doc(categoryID)
       .get()
       .then((snapshot) => {
         if (snapshot.exists) {
           resolve({
             ...snapshot.data(),
-            documentID: productID,
+            documentID: categoryID,
           });
         }
       })
