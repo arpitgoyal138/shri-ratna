@@ -116,8 +116,12 @@ export default function AdminNavbar() {
               >
                 <List>
                   {AdminMenuItems.map((item, index) => (
-                    <Link className={classes.menuItemLink} to={item.url}>
-                      <ListItem button key={index}>
+                    <Link
+                      className={classes.menuItemLink}
+                      to={item.url}
+                      key={index}
+                    >
+                      <ListItem button>
                         <ListItemIcon className={classes.muiMenuIcon}>
                           <i className={item.icon}></i>
                         </ListItemIcon>

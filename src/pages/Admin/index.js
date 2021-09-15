@@ -336,11 +336,12 @@ const Admin = (props) => {
                     }}
                   >
                     <Tooltip title="Delete">
-                      <IconButton className="action-button" aria-label="delete">
-                        <DeleteIcon
-                          className="action-icons delete-icon"
-                          onClick={() => handleDeleteFile(img.name)}
-                        />
+                      <IconButton
+                        className="action-button"
+                        aria-label="delete"
+                        onClick={() => handleDeleteFile(img.name)}
+                      >
+                        <DeleteIcon className="action-icons delete-icon" />
                       </IconButton>
                     </Tooltip>
                   </Paper>
@@ -527,13 +528,11 @@ const Admin = (props) => {
                                   <IconButton
                                     className="action-button"
                                     aria-label="delete"
+                                    onClick={() =>
+                                      dispatch(deleteProductStart(documentID))
+                                    }
                                   >
-                                    <DeleteIcon
-                                      className="action-icons delete-icon"
-                                      onClick={() =>
-                                        dispatch(deleteProductStart(documentID))
-                                      }
-                                    />
+                                    <DeleteIcon className="action-icons delete-icon" />
                                   </IconButton>
                                 </Tooltip>
                               </td>

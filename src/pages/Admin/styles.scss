@@ -69,6 +69,16 @@
     }
   }
 }
+.uploaded-product {
+  padding: 0;
+  height: 150px;
+  width: 150px;
+  background-size: cover;
+  background-position: center;
+  text-align: right;
+  margin: 10px;
+  float: left;
+}
 
 @media only screen and (max-width: 480px) {
   .add-icon {
@@ -76,7 +86,7 @@
   }
 
   .action-button {
-    padding: 10px !important;
+    padding: 5px !important;
   }
   .action-icons {
     font-size: 1rem !important;
@@ -123,8 +133,11 @@
       }
     }
   }
+  .uploaded-product {
+    height: 100px;
+    width: 100px;
+  }
 }
-
 .delete-icon {
   color: var(--primaryColorDanger);
 }
@@ -146,13 +159,8 @@
 input[type="file"] {
   display: none;
 }
-.uploaded-product {
-  padding: 0;
-  height: 150px;
-  width: 150px;
-  background-size: cover;
-  background-position: center;
-  text-align: right;
-  margin: 10px;
-  float: left;
+.action-button {
+  padding: 5px !important;
+  margin: 2px !important;
+  background-color: rgba(0, 0, 0, 0.64) !important;
 }

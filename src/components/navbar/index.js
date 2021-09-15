@@ -59,7 +59,7 @@ export default function Navbar() {
             Logout
           </Button>
           <Button className="button-mobile" onClick={() => signOut()}>
-            <i class="fas fa-sign-out-alt"></i>
+            <i className="fas fa-sign-out-alt"></i>
           </Button>
         </>
       )}
@@ -73,7 +73,7 @@ export default function Navbar() {
             Login
           </Button>
           <Button className="button-mobile" onClick={() => signIn()}>
-            <i class="fas fa-sign-in-alt"></i>
+            <i className="fas fa-sign-in-alt"></i>
           </Button>
         </>
       )}
