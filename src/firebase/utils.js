@@ -21,7 +21,7 @@ export const signInWithFacebook = () => {
 
 export const handleUserProfile = async ({ userAuth, additionalData }) => {
   if (!userAuth) return;
-  const { uid, displayName, email } = userAuth;
+  const { uid, displayName, email, photoURL } = userAuth;
   const userRef = firestore.doc(`users/${uid}`);
   const snapshot = await userRef.get();
   if (!snapshot.exists) {
@@ -33,6 +33,7 @@ export const handleUserProfile = async ({ userAuth, additionalData }) => {
         email,
         createdAt: timestamp,
         userRoles,
+        photoURL,
         ...additionalData,
       });
     } catch (err) {

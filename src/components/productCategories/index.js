@@ -216,7 +216,7 @@ const ProductCategories = () => {
                             </td> */}
 
                               <td>
-                                <Tooltip
+                                {/* <Tooltip
                                   title="Hide the category from website"
                                   aria-label="Visibility"
                                 >
@@ -226,7 +226,7 @@ const ProductCategories = () => {
                                   >
                                     <VisibilityIcon className="action-icons eye-icon" />
                                   </IconButton>
-                                </Tooltip>
+                                </Tooltip> */}
                                 <Tooltip
                                   title="Edit category"
                                   aria-label="edit"
@@ -234,33 +234,36 @@ const ProductCategories = () => {
                                   <IconButton
                                     className="action-button"
                                     aria-label="edit"
+                                    onClick={() =>
+                                      toggleAddCategoryModal(
+                                        "edit",
+                                        parent,
+                                        documentID,
+                                        categoryName
+                                      )
+                                    }
                                   >
-                                    <EditIcon
-                                      className="action-icons edit-icon"
-                                      onClick={() =>
-                                        toggleAddCategoryModal(
-                                          "edit",
-                                          parent,
-                                          documentID,
-                                          categoryName
-                                        )
-                                      }
-                                    />
+                                    <EditIcon className="action-icons edit-icon" />
                                   </IconButton>
                                 </Tooltip>
                                 <Tooltip title="Delete">
                                   <IconButton
                                     className="action-button"
                                     aria-label="delete"
-                                  >
-                                    <DeleteIcon
-                                      className="action-icons delete-icon"
-                                      onClick={() =>
+                                    onClick={() => {
+                                      if (
+                                        window.confirm(
+                                          "Sure to delete category " +
+                                            categoryName +
+                                            " ?"
+                                        )
+                                      )
                                         dispatch(
                                           deleteCategoryStart(documentID)
-                                        )
-                                      }
-                                    />
+                                        );
+                                    }}
+                                  >
+                                    <DeleteIcon className="action-icons delete-icon" />
                                   </IconButton>
                                 </Tooltip>
                               </td>

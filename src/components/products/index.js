@@ -20,10 +20,11 @@ const Products = ({ heading }) => {
         {data.map((product, index) => {
           return (
             <Link
+              key={index}
               style={{ color: "#444444", textDecoration: "none" }}
               to={`/products/${product.id}`}
             >
-              <ProductCard key={index}>
+              <ProductCard>
                 <ProductImg src={product.img} alt={product.alt} />
                 <ProductInfo>
                   <ProductName>{product.name}</ProductName>

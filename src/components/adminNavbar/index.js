@@ -20,7 +20,8 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { signOutUserStart } from "./../../redux/user/user.actions";
 import { Link } from "react-router-dom";
-
+import Avatar from "@material-ui/core/Avatar";
+import UserImage from "./../../assets/images/user.png";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -50,13 +51,26 @@ const useStyles = makeStyles((theme) => ({
   muiHeaderBgColor: {
     backgroundColor: "var(--primaryColorDark)",
   },
+  menuHeader: {
+    padding: "10px",
+    // backgroundColor: "darkGray",
+    textAlign: "center",
+  },
+  menuSidebarAvatar: {
+    display: "inline-block",
+    height: "70px",
+    width: "70px",
+  },
+  menuNavbarAvatar: {
+    display: "inline-block",
+  },
 }));
 const mapState = ({ user }) => ({
   currentUser: user.currentUser,
 });
 export default function AdminNavbar() {
   const { currentUser } = useSelector(mapState);
-
+  // console.log("current:", currentUser);
   const dispatch = useDispatch();
   const classes = useStyles();
 
@@ -114,7 +128,24 @@ export default function AdminNavbar() {
                 onClick={toggleDrawer()}
                 onKeyDown={toggleDrawer()}
               >
+                <div className={classes.menuHeader}>
+                  <Avatar
+                    className={classes.menuSidebarAvatar}
+                    alt={currentUser.displayName}
+                    src={currentUser.photoURL || UserImage}
+                  />
+                  <div>{currentUser.displayName}</div>
+                </div>
                 <List>
+                  <Link className={classes.menuItemLink} to="/">
+                    <ListItem button>
+                      <ListItemIcon className={classes.muiMenuIcon}>
+                        <i className="fas fa-store"></i>
+                      </ListItemIcon>
+                      <ListItemText primary="Go to website" />
+                    </ListItem>
+                  </Link>
+                  <Divider />
                   {AdminMenuItems.map((item, index) => (
                     <Link
                       className={classes.menuItemLink}
@@ -146,7 +177,11 @@ export default function AdminNavbar() {
                 onClick={handleMenu}
                 color="inherit"
               >
-                <AccountCircle className={classes.muiIcon} />
+                {/* <AccountCircle className={classes.muiIcon} /> */}
+                <Avatar
+                  alt={currentUser.displayName}
+                  src={currentUser.photoURL || UserImage}
+                />
               </IconButton>
               <Menu
                 id="menu-appbar"

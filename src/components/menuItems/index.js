@@ -28,20 +28,8 @@ export const WebsiteMenuItems = [
 
 export const AdminMenuItems = [
   {
-    title: "Go to Website",
-    url: "/",
-    clsName: "nav-links",
-    icon: "fas fa-store",
-  },
-  {
-    title: "Admin Home",
-    url: "/admin",
-    clsName: "nav-links",
-    icon: "fas fa-house-user",
-  },
-  {
     title: "Products",
-    url: "/products",
+    url: "/admin",
     clsName: "nav-links",
     icon: "fas fa-cubes",
   },

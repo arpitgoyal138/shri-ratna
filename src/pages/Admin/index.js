@@ -44,6 +44,9 @@ import { productSchema } from "../../components/schemas/product";
 // Assets
 import AddProductImage from "./../../assets/images/placeholders/add-product.jpg";
 
+import Compress from "compress.js";
+
+const compress = new Compress();
 const mapState = ({ productsData, categoriesData }) => ({
   products: productsData.products,
   categories: categoriesData.categories,
@@ -64,9 +67,12 @@ const Admin = (props) => {
   const [selProductId, setSelProductId] = useState("");
   const [selAction, setSelAction] = useState("");
   const [image, setImage] = useState(null);
+  const [imageData, setImageData] = useState([]);
   const [progress, setProgress] = useState(0);
-  //
+  const [childCategories, setChildCategories] = useState([]);
+  const [selCategories, setSelCategories] = useState([]);
   const { data, queryDoc, isLastPage } = products;
+
   useEffect(() => {
     dispatch(fetchProductsStart());
     dispatch(fetchCategoriesStart());
@@ -78,14 +84,45 @@ const Admin = (props) => {
     if (upImage) {
       console.log("image:", upImage);
       setImage(upImage);
-      handleFileUpload({
-        path: "images/products/",
-        file: upImage,
-      });
+
+      compress
+        .compress([...e.target.files], {
+          size: 5, // the max size in MB, defaults to 2MB
+          quality: 0.75, // the quality of the image, max is 1,
+          maxWidth: 900, // the max width of the output image, defaults to 1920px
+          maxHeight: 900, // the max height of the output image, defaults to 1920px
+          resize: true, // defaults to true, set false if you do not want to resize the image width and height
+          rotate: true, // Enables rotation, defaults to false
+        })
+        .then((img_data) => {
+          // returns an array of compressed images
+          console.log("img_data:", img_data);
+          setImageData((prevState) => {
+            if (prevState) {
+              return [...prevState, ...img_data];
+            } else {
+              return img_data;
+            }
+          });
+
+          ///// Convert base64 to file /////////
+          const img_ = img_data[0];
+          const fileName = img_.alt;
+          const base64str = img_.data;
+          const imgExt = img_.ext;
+          const file = Compress.convertBase64ToFile(base64str, imgExt);
+          handleFileUpload({
+            path: "images/products/",
+            file,
+            fileName,
+          });
+        });
     }
   };
-  const handleFileUpload = ({ path, file }) => {
-    const uploadTask = storage.ref(`${path}/${file.name}`).put(file);
+  console.log("imageData:", imageData);
+  const handleFileUpload = ({ path, file, fileName }) => {
+    console.log("path:", path, " file:", file);
+    const uploadTask = storage.ref(`${path}/${fileName}`).put(file);
     uploadTask.on(
       "state_changed",
       (snapshot) => {
@@ -100,7 +137,7 @@ const Admin = (props) => {
       () => {
         storage
           .ref(`${path}`)
-          .child(file.name)
+          .child(fileName)
           .getDownloadURL()
           .then((fileUrl) => {
             console.log("url:", fileUrl);
@@ -108,16 +145,18 @@ const Admin = (props) => {
               ...prevState,
               productImages: [
                 ...prevState.productImages,
-                { name: file.name, url: fileUrl },
+                { name: fileName, url: fileUrl },
               ],
             }));
-            console.log("Product: ", product);
           });
       }
     );
   };
-  const handleDeleteFile = (fileName) => {
-    console.log("delete file:", fileName);
+  const handleDeleteFile = (index, fileName) => {
+    console.log("delete file:", index);
+    const tempImageData = [...imageData];
+    tempImageData.splice(index, 1);
+    setImageData(tempImageData);
     storage
       .ref(`images/products/`)
       .child(fileName)
@@ -163,6 +202,8 @@ const Admin = (props) => {
     setHideAddProductModal(true);
     setSelProductId("");
     setProduct(productSchema);
+    setChildCategories([]);
+    setSelCategories([]);
   };
   const resetAddCategoryForm = () => {
     setHideAddCategoryModal(true);
@@ -173,20 +214,29 @@ const Admin = (props) => {
     e.preventDefault();
     if (selAction === "edit") {
       //
-      dispatch(
-        updateProductStart(
-          {
-            ...product,
-          },
-          selProductId
-        )
-      );
+      if (product.productCategory.id !== "") {
+        dispatch(
+          updateProductStart(
+            {
+              ...product,
+            },
+            selProductId
+          )
+        );
+      } else {
+        window.alert("Please select category");
+        return;
+      }
     } else {
-      dispatch(
-        addProductStart({
-          ...product,
-        })
-      );
+      if (product.productCategory.id !== "") {
+        dispatch(
+          addProductStart({
+            ...product,
+          })
+        );
+      } else {
+        window.alert("Please select category");
+      }
     }
 
     resetAddProductForm();
@@ -221,22 +271,92 @@ const Admin = (props) => {
       })
     );
   };
+  console.log("product:", product);
+  const handleCategoryChange = (e, lvl) => {
+    let index = e.nativeEvent.target.selectedIndex;
+    const tempChildCategories = [...childCategories];
+    tempChildCategories.splice(lvl + 1);
+    setChildCategories(tempChildCategories);
+    const tempSelCategories = [...selCategories];
 
+    tempSelCategories.splice(lvl + 1);
+
+    setSelCategories(tempSelCategories);
+
+    if (e.target.value !== "") {
+      setSelCategories((prevState) => {
+        if (prevState) {
+          return [...prevState, e.target.value];
+        } else {
+          return [e.target.value];
+        }
+      });
+      getChildCategories(e.target.value, e.target[index].text, lvl);
+    } else {
+      setProduct((prevState) => ({
+        ...prevState,
+        productCategory: { id: "", name: "" },
+      }));
+    }
+  };
   const configLoadMore = {
     onLoadMoreEvt: handleLoadMore,
   };
 
   let categoriesArr = [];
-
+  let parentCategories = [];
+  let childCategoriesArr = [];
   Array.isArray(categories.data) &&
     categories.data.length > 0 &&
     categories.data.map((category, index) => {
+      if (!category.parent || category.parent.id === "") {
+        parentCategories.push({
+          value: category.documentID,
+          name: category.categoryName,
+        });
+      }
       categoriesArr[index] = {
         name: category.categoryName,
         value: category.documentID,
       };
       return 0;
     });
+
+  const getChildCategories = (id, name, level) => {
+    Array.isArray(categories.data) &&
+      categories.data.length > 0 &&
+      categories.data.map((category, index) => {
+        if (category.parent && category.parent.id === id) {
+          childCategoriesArr.push({
+            value: category.documentID,
+            name: category.categoryName,
+          });
+        }
+        return 0;
+      });
+    if (childCategoriesArr.length !== 0) {
+      setChildCategories((prevState) => {
+        if (prevState) {
+          return [...prevState, childCategoriesArr];
+        } else {
+          return [childCategoriesArr];
+        }
+      });
+      setProduct((prevState) => ({
+        ...prevState,
+        productCategory: { id: "", name: "" },
+      }));
+    } else {
+      setProduct((prevState) => ({
+        ...prevState,
+        productCategory: {
+          id,
+          name,
+        },
+      }));
+    }
+  };
+
   return (
     <div className="admin">
       <div className="callToActions">
@@ -267,34 +387,40 @@ const Admin = (props) => {
             <Divider />
             <FormSelect
               label="Category"
-              defaultValue={product.productCategory.id}
               options={[
                 {
-                  name: "- Select Category",
+                  name: "- Select category",
                   value: "",
                 },
-                ...categoriesArr,
+                ...parentCategories,
               ]}
-              required
-              handleChange={(e) => {
-                let index = e.nativeEvent.target.selectedIndex;
-                if (e.target.value !== "") {
-                  setProduct((prevState) => ({
-                    ...prevState,
-                    productCategory: {
-                      id: e.target.value,
-                      name: e.target[index].text,
-                    },
-                  }));
-                  console.log("Product: ", product);
-                } else {
-                  setProduct((prevState) => ({
-                    ...prevState,
-                    productCategory: { id: "", name: "" },
-                  }));
-                }
-              }}
+              required={selAction === "add" ? true : false}
+              handleChange={(e) => handleCategoryChange(e, -1)}
             />
+            {childCategories &&
+              childCategories.length > 0 &&
+              childCategories.map((category, index) => {
+                return (
+                  <FormSelect
+                    label="Sub category"
+                    defaultValue={
+                      selCategories[index + 1]
+                        ? selCategories[index + 1].value
+                        : ""
+                    }
+                    options={[
+                      {
+                        name: "- Select sub category",
+                        value: "",
+                      },
+                      ...category,
+                    ]}
+                    required
+                    handleChange={(e) => handleCategoryChange(e, index)}
+                    key={index}
+                  />
+                );
+              })}
             <FormInput
               label="Title"
               type="text"
@@ -311,9 +437,9 @@ const Admin = (props) => {
             <FormInput
               label="Price"
               type="number"
-              min="0.00"
-              max="10000.00"
-              step="0.01"
+              min="1"
+              max="10000000"
+              step="1"
               value={product.productPrice}
               handleChange={(e) =>
                 setProduct((prevState) => ({
@@ -323,31 +449,65 @@ const Admin = (props) => {
               }
               required
             />
-            {product.productImages.map((img, index) => {
-              return (
-                <label className="uploaded-product" key={index}>
-                  <Paper
-                    style={{
-                      backgroundImage: `url(${img.url})`,
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                      height: "100%",
-                      width: "100%",
-                    }}
-                  >
-                    <Tooltip title="Delete">
-                      <IconButton
-                        className="action-button"
-                        aria-label="delete"
-                        onClick={() => handleDeleteFile(img.name)}
-                      >
-                        <DeleteIcon className="action-icons delete-icon" />
-                      </IconButton>
-                    </Tooltip>
-                  </Paper>
-                </label>
-              );
-            })}
+            {selAction === "add" &&
+              imageData.map((img, index) => {
+                return (
+                  <label className="uploaded-product" key={index}>
+                    <Paper
+                      style={{
+                        backgroundImage: `url(${img.prefix}${img.data})`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                        height: "100%",
+                        width: "100%",
+                      }}
+                    >
+                      <Tooltip title="Delete">
+                        <IconButton
+                          className="action-button"
+                          aria-label="delete"
+                          onClick={() => {
+                            if (window.confirm("Sure to delete?"))
+                              handleDeleteFile(index, img.alt);
+                          }}
+                        >
+                          <DeleteIcon className="action-icons delete-icon" />
+                        </IconButton>
+                      </Tooltip>
+                    </Paper>
+                  </label>
+                );
+              })}
+
+            {selAction === "edit" &&
+              product.productImages.map((img, index) => {
+                return (
+                  <label className="uploaded-product" key={index}>
+                    <Paper
+                      style={{
+                        backgroundImage: `url(${img.url})`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                        height: "100%",
+                        width: "100%",
+                      }}
+                    >
+                      <Tooltip title="Delete">
+                        <IconButton
+                          className="action-button"
+                          aria-label="delete"
+                          onClick={() => {
+                            if (window.confirm("Sure to delete?"))
+                              handleDeleteFile(index, img.name);
+                          }}
+                        >
+                          <DeleteIcon className="action-icons delete-icon" />
+                        </IconButton>
+                      </Tooltip>
+                    </Paper>
+                  </label>
+                );
+              })}
 
             <FileUpload
               handleChange={handleImageChange}
@@ -439,15 +599,15 @@ const Admin = (props) => {
                     cellPadding="10"
                     cellSpacing="0"
                   >
-                    <tr className="table_heading">
-                      <th>Image</th>
-                      <th>Title</th>
-                      <th>Category</th>
-                      <th>Price</th>
-                      {/* <th>Created at</th> */}
-                      <th>Actions</th>
-                    </tr>
                     <tbody className="table_data">
+                      <tr className="table_heading">
+                        <th>Image</th>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        {/* <th>Created at</th> */}
+                        <th>Actions</th>
+                      </tr>
                       {Array.isArray(data) &&
                         data.length > 0 &&
                         data.map((item, index) => {
@@ -467,7 +627,7 @@ const Admin = (props) => {
                                 <img
                                   className="thumb"
                                   src={
-                                    productImages
+                                    productImages.length > 0
                                       ? productImages[0].url
                                       : "https://via.placeholder.com/150"
                                   }
@@ -494,12 +654,20 @@ const Admin = (props) => {
                                   <IconButton
                                     className="action-button"
                                     aria-label="Visibility"
-                                    onClick={(e) =>
-                                      handleVisibility(
-                                        !productVisible,
-                                        documentID
-                                      )
-                                    }
+                                    onClick={(e) => {
+                                      const str = productVisible
+                                        ? "Hide the product " +
+                                          productName +
+                                          " from website ?"
+                                        : "Show the product " +
+                                          productName +
+                                          " on website?";
+                                      if (window.confirm(str))
+                                        handleVisibility(
+                                          !productVisible,
+                                          documentID
+                                        );
+                                    }}
                                   >
                                     {productVisible && (
                                       <VisibilityIcon className="action-icons eye-icon" />
@@ -528,9 +696,18 @@ const Admin = (props) => {
                                   <IconButton
                                     className="action-button"
                                     aria-label="delete"
-                                    onClick={() =>
-                                      dispatch(deleteProductStart(documentID))
-                                    }
+                                    onClick={() => {
+                                      if (
+                                        window.confirm(
+                                          "Sure to delete product " +
+                                            productName +
+                                            " ?"
+                                        )
+                                      )
+                                        dispatch(
+                                          deleteProductStart(documentID)
+                                        );
+                                    }}
                                   >
                                     <DeleteIcon className="action-icons delete-icon" />
                                   </IconButton>

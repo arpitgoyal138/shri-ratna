@@ -78,6 +78,9 @@
   text-align: right;
   margin: 10px;
   float: left;
+  .action-button {
+    background-color: rgba(0, 0, 0, 0.64) !important;
+  }
 }
 
 @media only screen and (max-width: 480px) {
@@ -162,5 +165,4 @@ input[type="file"] {
 .action-button {
   padding: 5px !important;
   margin: 2px !important;
-  background-color: rgba(0, 0, 0, 0.64) !important;
 }
