@@ -53,6 +53,11 @@
         height: 8rem;
         padding: 5px;
         vertical-align: middle;
+        // background: url("./../../assets/images/placeholders/add-product.jpg");
+        background: url("./../../assets/images/placeholders/product-placeholder.png");
+        background-position: center;
+        background-size: 95%;
+        background-repeat: no-repeat;
       }
     }
     tr.table_heading {

@@ -22,6 +22,7 @@ import { signOutUserStart } from "./../../redux/user/user.actions";
 import { Link } from "react-router-dom";
 import Avatar from "@material-ui/core/Avatar";
 import UserImage from "./../../assets/images/user.png";
+import Button from "./../forms/Button";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -135,6 +136,7 @@ export default function AdminNavbar() {
                     src={currentUser.photoURL || UserImage}
                   />
                   <div>{currentUser.displayName}</div>
+                  <Button onClick={signOut}>Log out</Button>
                 </div>
                 <List>
                   <Link className={classes.menuItemLink} to="/">
@@ -169,40 +171,40 @@ export default function AdminNavbar() {
             Admin
           </Typography>
           {
-            <div>
-              <IconButton
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
-              >
-                {/* <AccountCircle className={classes.muiIcon} /> */}
-                <Avatar
-                  alt={currentUser.displayName}
-                  src={currentUser.photoURL || UserImage}
-                />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={openUserMenu}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
-                <MenuItem onClick={signOut}>Logout</MenuItem>
-              </Menu>
-            </div>
+            // <div>
+            //   <IconButton
+            //     aria-label="account of current user"
+            //     aria-controls="menu-appbar"
+            //     aria-haspopup="true"
+            //     onClick={handleMenu}
+            //     color="inherit"
+            //   >
+            //     {/* <AccountCircle className={classes.muiIcon} /> */}
+            //     <Avatar
+            //       alt={currentUser.displayName}
+            //       src={currentUser.photoURL || UserImage}
+            //     />
+            //   </IconButton>
+            //   <Menu
+            //     id="menu-appbar"
+            //     anchorEl={anchorEl}
+            //     anchorOrigin={{
+            //       vertical: "top",
+            //       horizontal: "right",
+            //     }}
+            //     keepMounted
+            //     transformOrigin={{
+            //       vertical: "top",
+            //       horizontal: "right",
+            //     }}
+            //     open={openUserMenu}
+            //     onClose={handleClose}
+            //   >
+            //     <MenuItem onClick={handleClose}>Profile</MenuItem>
+            //     <MenuItem onClick={handleClose}>My account</MenuItem>
+            //     <MenuItem onClick={signOut}>Logout</MenuItem>
+            //   </Menu>
+            // </div>
           }
         </Toolbar>
       </AppBar>

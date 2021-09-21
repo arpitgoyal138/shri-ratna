@@ -44,6 +44,7 @@ import { productSchema } from "../../components/schemas/product";
 // Assets
 import AddProductImage from "./../../assets/images/placeholders/add-product.jpg";
 
+// Image Libraries
 import Compress from "compress.js";
 
 const compress = new Compress();
@@ -87,7 +88,7 @@ const Admin = (props) => {
 
       compress
         .compress([...e.target.files], {
-          size: 5, // the max size in MB, defaults to 2MB
+          size: 10, // the max size in MB, defaults to 2MB
           quality: 0.75, // the quality of the image, max is 1,
           maxWidth: 900, // the max width of the output image, defaults to 1920px
           maxHeight: 900, // the max height of the output image, defaults to 1920px
@@ -204,6 +205,7 @@ const Admin = (props) => {
     setProduct(productSchema);
     setChildCategories([]);
     setSelCategories([]);
+    setImageData([]);
   };
   const resetAddCategoryForm = () => {
     setHideAddCategoryModal(true);
@@ -729,7 +731,9 @@ const Admin = (props) => {
                     <tbody>
                       <tr>
                         <td>
-                          {!isLastPage && <LoadMore {...configLoadMore} />}
+                          {products.data.length > 10 && !isLastPage && (
+                            <LoadMore {...configLoadMore} />
+                          )}
                         </td>
                       </tr>
                     </tbody>
