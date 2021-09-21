@@ -6,8 +6,6 @@ import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Button from "../forms/Button";
 import FormInput from "../forms/FormInput";
-import "./../../assets/css/custom.scss";
-import "./../../App.scss";
 import AuthWrapper from "../authWrapper";
 import { useHistory } from "react-router-dom";
 import {
@@ -16,11 +14,12 @@ import {
 } from "../../redux/user/user.actions";
 const mapState = ({ user }) => ({
   currentUser: user.currentUser,
+  userError: user.userError,
 });
 const Signin = () => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const { currentUser } = useSelector(mapState);
+  const { currentUser, userError } = useSelector(mapState);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -31,7 +30,11 @@ const Signin = () => {
       history.push("/");
     }
   }, [currentUser]);
-
+  useEffect(() => {
+    if (userError !== "") {
+      setMessage(userError);
+    }
+  }, [userError]);
   const resetForm = () => {
     setEmail("");
     setPassword("");

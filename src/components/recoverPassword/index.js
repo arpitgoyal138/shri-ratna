@@ -20,7 +20,7 @@ const RecoverPassword = () => {
 
   useEffect(() => {
     if (recoverPasswordSuccess) {
-      setSuccess("Link sent");
+      setSuccess("Link sent Successfully. Please check your mail");
       setError("");
     }
   }, [recoverPasswordSuccess]);

@@ -30,6 +30,7 @@ import WithAdminAuth from "./hoc/withAdminAuth";
 // stylesheets
 import "./App.scss";
 import "./assets/css/_globals.scss";
+import "./assets/css/custom.scss";
 
 // Material UI
 import CircularProgress from "@material-ui/core/CircularProgress";
