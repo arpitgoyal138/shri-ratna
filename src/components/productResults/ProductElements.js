@@ -9,7 +9,7 @@ export const ProductsContainer = styled.div`
 
 export const ProductHeading = styled.h2`
   /* font-size: clamp(2rem, 2.5vw, 3rem); */
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   text-align: center;
   margin-bottom: 2vh;
   font-weight: 400;
@@ -46,10 +46,10 @@ export const ProductImg = styled.img`
 
 export const ProductName = styled.h3`
   font-weight: 400;
-  font-size: 1.3rem;
+  font-size: 1rem;
   /* margin: 0.5rem auto; */
   @media screen and (max-width: 480px) {
-    font-size: 1rem;
+    font-size: 0.85rem;
   }
 `;
 
@@ -58,11 +58,11 @@ export const ProductInfo = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 0 10px;
+  /* padding: 0 10px; */
   text-align: center;
-  font-size: 1rem;
+  font-size: 1.1rem;
   @media screen and (max-width: 480px) {
-    padding: 0 5px;
+    /* padding: 0 5px; */
   }
   /* margin: 0.5rem auto; */
 `;
@@ -74,10 +74,10 @@ export const ProductDesc = styled.p`
 
 export const ProductPrice = styled.p`
   margin-bottom: 1vh;
-  font-size: 1.3rem;
+  font-size: 1rem;
   font-weight: bold;
   @media screen and (max-width: 480px) {
-    font-size: 1rem;
+    font-size: 0.85rem;
   }
   /* margin: 0.5rem auto; */
 `;

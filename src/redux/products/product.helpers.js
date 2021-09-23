@@ -30,12 +30,13 @@ export const handleUpdateProduct = ({ payload, documentID }) => {
   });
 };
 export const handleFetchProducts = ({
+  pageSize,
   filterType,
   startAfterDoc,
   persistProducts = [],
 }) => {
   return new Promise((resolve, reject) => {
-    const pageSize = 6;
+    //const pageSize = 10;
 
     let ref = firestore
       .collection("products")
@@ -63,7 +64,7 @@ export const handleFetchProducts = ({
         resolve({
           data,
           queryDoc: snapshot.docs[totalCount - 1],
-          isLastPage: totalCount < 1,
+          isLastPage: totalCount < pageSize,
         });
       })
       .catch((err) => {

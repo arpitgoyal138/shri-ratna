@@ -9,7 +9,6 @@ export const productData = [
     desc: "मार्बल डस्ट",
     price: "5100",
     img: product1,
-    alt: "product1",
     id: "1234",
   },
   {
@@ -17,7 +16,6 @@ export const productData = [
     desc: "Description here",
     price: "300",
     img: product2,
-    alt: "product2",
     id: "1235",
   },
   {
@@ -25,7 +23,6 @@ export const productData = [
     desc: "Description here",
     price: "70",
     img: product3,
-    alt: "product3",
     id: "1236",
   },
   {
@@ -33,7 +30,6 @@ export const productData = [
     desc: "Description here",
     price: "100",
     img: product4,
-    alt: "product4",
     id: "1237",
   },
 
@@ -42,7 +38,6 @@ export const productData = [
     desc: "Description here",
     price: "200",
     img: product5,
-    alt: "product5",
     id: "1238",
   },
   {
@@ -50,7 +45,6 @@ export const productData = [
     desc: "मार्बल डस्ट",
     price: "2100",
     img: product1,
-    alt: "product1",
     id: "1239",
   },
   {
@@ -58,7 +52,6 @@ export const productData = [
     desc: "Description here",
     price: "300",
     img: product2,
-    alt: "product2",
     id: "1240",
   },
   {
@@ -66,7 +59,6 @@ export const productData = [
     desc: "Description here",
     price: "70",
     img: product3,
-    alt: "product3",
     id: "1241",
   },
   {
@@ -74,7 +66,6 @@ export const productData = [
     desc: "Description here",
     price: "100",
     img: product4,
-    alt: "product4",
     id: "1242",
   },
 
@@ -83,7 +74,6 @@ export const productData = [
     desc: "Description here",
     price: "200",
     img: product5,
-    alt: "product5",
     id: "1243",
   },
 ];

@@ -73,9 +73,10 @@ const Admin = (props) => {
   const [childCategories, setChildCategories] = useState([]);
   const [selCategories, setSelCategories] = useState([]);
   const { data, queryDoc, isLastPage } = products;
+  const limitPageSize = 10;
 
   useEffect(() => {
-    dispatch(fetchProductsStart());
+    dispatch(fetchProductsStart({ pageSize: limitPageSize }));
     dispatch(fetchCategoriesStart());
   }, []);
 
@@ -120,7 +121,6 @@ const Admin = (props) => {
         });
     }
   };
-  console.log("imageData:", imageData);
   const handleFileUpload = ({ path, file, fileName }) => {
     console.log("path:", path, " file:", file);
     const uploadTask = storage.ref(`${path}/${fileName}`).put(file);
@@ -177,12 +177,16 @@ const Admin = (props) => {
       });
   };
   const toggleAddProductModal = (action, currentProduct, documentID) => {
-    console.log("currentProduct:", currentProduct);
-    setSelAction(action);
     if (action === "edit") {
+      setSelAction(action);
+      resetAddProductForm();
       setSelProductId(documentID);
       setProduct({ ...currentProduct });
-    } else {
+    }
+    if (action === "add") {
+      setSelAction(action);
+    }
+    if (selAction === "edit" && action === undefined) {
       resetAddProductForm();
     }
     setHideAddProductModal(!hideAddProductModal);
@@ -225,6 +229,7 @@ const Admin = (props) => {
             selProductId
           )
         );
+        resetAddProductForm();
       } else {
         window.alert("Please select category");
         return;
@@ -236,12 +241,12 @@ const Admin = (props) => {
             ...product,
           })
         );
+        resetAddProductForm();
       } else {
         window.alert("Please select category");
+        return;
       }
     }
-
-    resetAddProductForm();
   };
   const handleVisibility = (visibility, documentID) => {
     console.log("visibility: ", visibility, " docId:", documentID);
@@ -268,12 +273,13 @@ const Admin = (props) => {
   const handleLoadMore = () => {
     dispatch(
       fetchProductsStart({
+        pageSize: limitPageSize,
         startAfterDoc: queryDoc,
         persistProducts: data,
       })
     );
   };
-  console.log("product:", product);
+  console.log("products:", products);
   const handleCategoryChange = (e, lvl) => {
     let index = e.nativeEvent.target.selectedIndex;
     const tempChildCategories = [...childCategories];
@@ -608,7 +614,7 @@ const Admin = (props) => {
                         <th>Category</th>
                         <th>Price</th>
                         {/* <th>Created at</th> */}
-                        <th>Actions</th>
+                        <th></th>
                       </tr>
                       {Array.isArray(data) &&
                         data.length > 0 &&
@@ -731,9 +737,7 @@ const Admin = (props) => {
                     <tbody>
                       <tr>
                         <td>
-                          {products.data.length > 10 && !isLastPage && (
-                            <LoadMore {...configLoadMore} />
-                          )}
+                          {!isLastPage && <LoadMore {...configLoadMore} />}
                         </td>
                       </tr>
                     </tbody>

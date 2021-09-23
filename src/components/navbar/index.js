@@ -41,7 +41,7 @@ export default function Navbar() {
       <ul className={isMenuOpen ? "nav-menu active" : "nav-menu"}>
         {WebsiteMenuItems.map((item, index) => {
           return (
-            <li key={index}>
+            <li key={index} onClick={toggleMenu}>
               <Link className={item.clsName} to={item.url}>
                 {item.title}
               </Link>

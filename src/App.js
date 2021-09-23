@@ -34,6 +34,8 @@ import "./assets/css/custom.scss";
 
 // Material UI
 import CircularProgress from "@material-ui/core/CircularProgress";
+import ProductResults from "./components/productResults";
+
 const mapState = ({ user }) => ({
   loading: user.loading,
 });
@@ -64,12 +66,22 @@ const App = (props) => {
             </HomePageLayout>
           )}
         />
+
         <Route
           path="/login"
           render={() => (
             <LoginPageLayout>
               <Login />
             </LoginPageLayout>
+          )}
+        />
+        <Route
+          path="/products"
+          exact
+          render={() => (
+            <HomePageLayout>
+              <ProductResults />
+            </HomePageLayout>
           )}
         />
         <Route
