@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 // Pages
-import ProductDetail from "./pages/ProductDetail";
+import ProductDetails from "./pages/ProductDetails";
 import Admin from "./pages/Admin";
 import Registration from "./pages/Registration";
 import Recovery from "./pages/Recovery";
@@ -18,7 +18,6 @@ import AdminToolbar from "./components/adminToolbar";
 import AdminPageLayout from "./layouts/AdminPageLayout";
 import HomePageLayout from "./layouts/HomePageLayout";
 import LoginPageLayout from "./layouts/LoginPageLayout";
-import ProductDetailPageLayout from "./layouts/ProductDetailPageLayout";
 
 // redux
 import { checkUserSession } from "./redux/user/user.actions";
@@ -84,12 +83,20 @@ const App = (props) => {
             </HomePageLayout>
           )}
         />
-        <Route
-          path="/products/:id"
+        {/* <Route
+          path="/products/:filterType"
           render={() => (
-            <ProductDetailPageLayout>
-              <ProductDetail {...props} />
-            </ProductDetailPageLayout>
+            <HomePageLayout>
+              <ProductResults {...props} />
+            </HomePageLayout>
+          )}
+        /> */}
+        <Route
+          path="/products/:productID"
+          render={() => (
+            <HomePageLayout>
+              <ProductDetails {...props} />
+            </HomePageLayout>
           )}
         />
         <Route

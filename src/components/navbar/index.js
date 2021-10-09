@@ -28,11 +28,11 @@ export default function Navbar() {
   };
   return (
     <nav className="navbarItems">
-      <a href="/">
+      <Link to="/">
         <h1 className="navbar-logo">
           श्री रत्न भण्डार <i className="fab fa-react"></i>
         </h1>
-      </a>
+      </Link>
 
       <button className="menu-icon" onClick={toggleMenu}>
         {isMenuOpen && <CloseIcon className="mui-icon" />}

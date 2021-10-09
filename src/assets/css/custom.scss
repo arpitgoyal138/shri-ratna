@@ -56,10 +56,23 @@
   width: 100%;
   margin: 1rem auto 0;
 }
-
+.get-latest-price-btn {
+  border: 0;
+  padding: 3px 10px;
+  margin-bottom: 5px;
+  cursor: pointer;
+  color: #6a6a6a;
+  border-radius: 2px;
+  &:hover {
+    background-color: #dbdbdb;
+  }
+}
 @media screen and (max-width: 480px) {
   .social_btn {
     font-size: 0.85rem;
     padding: 10px 5px;
+  }
+  .get-latest-price-btn {
+    font-size: 0.75rem;
   }
 }

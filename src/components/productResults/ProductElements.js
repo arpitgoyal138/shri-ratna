@@ -4,6 +4,8 @@ export const ProductsContainer = styled.div`
   /* width: 100vw; */
   /* min-height: 100vh; */
   padding: 5rem calc((100vw-1300px) / 2);
+  /* display: flex;
+  flex-wrap: wrap; */
   /* background: #150f0f; */
 `;
 
@@ -25,18 +27,19 @@ export const ProductWrapper = styled.div`
 export const ProductCard = styled.div`
   margin: 1vh;
   line-height: 1.5;
-  box-shadow: 0px 1px 3px #ccc;
-  transition: 0.1s;
-  &:hover {
-    transform: scale(1.018);
-    box-shadow: 1px 1px 5px;
-  }
+  /* box-shadow: 0px 1px 3px #ccc; */
 `;
 
 export const ProductImg = styled.img`
-  height: 250px;
-  width: 250px;
+  height: 200px;
+  width: 200px;
   max-width: 100%;
+  transition: 0.1s;
+
+  &:hover {
+    transform: scale(1.018);
+    /* box-shadow: 1px 1px 5px; */
+  }
   @media screen and (max-width: 768px) {
     height: 160px;
     width: 160px;
@@ -48,6 +51,7 @@ export const ProductName = styled.h3`
   font-weight: 400;
   font-size: 1rem;
   /* margin: 0.5rem auto; */
+  color: #6c6c6c;
   @media screen and (max-width: 480px) {
     font-size: 0.85rem;
   }
@@ -60,7 +64,7 @@ export const ProductInfo = styled.div`
   align-items: center;
   /* padding: 0 10px; */
   text-align: center;
-  font-size: 1.1rem;
+  font-size: 1rem;
   @media screen and (max-width: 480px) {
     /* padding: 0 5px; */
   }
@@ -76,6 +80,7 @@ export const ProductPrice = styled.p`
   margin-bottom: 1vh;
   font-size: 1rem;
   font-weight: bold;
+  color: #6c6c6c;
   @media screen and (max-width: 480px) {
     font-size: 0.85rem;
   }

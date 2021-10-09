@@ -73,7 +73,7 @@ const Admin = (props) => {
   const [childCategories, setChildCategories] = useState([]);
   const [selCategories, setSelCategories] = useState([]);
   const { data, queryDoc, isLastPage } = products;
-  const limitPageSize = 10;
+  const limitPageSize = 20;
 
   useEffect(() => {
     dispatch(fetchProductsStart({ pageSize: limitPageSize }));
@@ -445,17 +445,15 @@ const Admin = (props) => {
             <FormInput
               label="Price"
               type="number"
-              min="1"
-              max="10000000"
+              min="0"
               step="1"
-              value={product.productPrice}
+              value={product.productPrice || 0}
               handleChange={(e) =>
                 setProduct((prevState) => ({
                   ...prevState,
                   productPrice: e.target.value,
                 }))
               }
-              required
             />
             {selAction === "add" &&
               imageData.map((img, index) => {
@@ -644,7 +642,7 @@ const Admin = (props) => {
                               </td>
                               <td>{productName}</td>
                               <td>{productCategory.name}</td>
-                              <td>Rs. {productPrice}</td>
+                              <td>Rs. {productPrice || 0}</td>
                               {/* <td>
                               {createdDate.toDate().toDateString()}{" "}
                               {createdDate.toDate().toLocaleTimeString()}

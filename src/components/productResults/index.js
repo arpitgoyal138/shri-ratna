@@ -1,7 +1,9 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchProductsStart } from "../../redux/products/product.actions";
-import { productData as data } from "./data";
+import {
+  fetchProductsStart,
+  setProducts,
+} from "../../redux/products/product.actions";
 import Product from "./product";
 import {
   ProductsContainer,
@@ -17,7 +19,7 @@ const ProductResults = ({ heading }) => {
   useEffect(() => {
     dispatch(fetchProductsStart());
   }, []);
-  console.log("products: ", products);
+  console.log("products in ProductResults: ", products);
 
   if (!Array.isArray(products)) return null;
   if (products.length < 1) {
@@ -27,7 +29,7 @@ const ProductResults = ({ heading }) => {
     <ProductsContainer id="products">
       <ProductHeading>{heading}</ProductHeading>
       <ProductWrapper>
-        {products.map((product) => {
+        {products.map((product, idx) => {
           const {
             documentID,
             productCategory,
@@ -35,7 +37,9 @@ const ProductResults = ({ heading }) => {
             productImages,
             productName,
             productPrice,
+            productVisible,
           } = product;
+          if (!productVisible) return null;
           const configProduct = {
             documentID,
             productCategory,
@@ -44,7 +48,7 @@ const ProductResults = ({ heading }) => {
             productName,
             productPrice,
           };
-          return <Product {...configProduct} />;
+          return <Product {...configProduct} key={idx} />;
         })}
       </ProductWrapper>
     </ProductsContainer>

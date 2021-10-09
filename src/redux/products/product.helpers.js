@@ -15,7 +15,7 @@ export const handleAddProduct = (product) => {
   });
 };
 export const handleUpdateProduct = ({ payload, documentID }) => {
-  console.log("handleUpdateProduct: ID=", documentID, " payload:", payload);
+  // console.log("handleUpdateProduct: ID=", documentID, " payload:", payload);
   return new Promise((resolve, reject) => {
     firestore
       .collection("products")
@@ -32,44 +32,37 @@ export const handleUpdateProduct = ({ payload, documentID }) => {
 export const handleFetchProducts = ({
   pageSize,
   filterType,
+  visibility,
   startAfterDoc,
   persistProducts = [],
 }) => {
+  console.log("visibility: ", visibility);
   return new Promise((resolve, reject) => {
-    //const pageSize = 10;
-
     let ref = firestore
       .collection("products")
-      .orderBy("createdDate")
+      .orderBy("createdDate", "desc")
       .limit(pageSize);
 
-    if (filterType) ref = ref.where("productCategory", "==", filterType);
+    if (filterType) ref = ref.where("productCategory.name", "==", filterType);
     if (startAfterDoc) ref = ref.startAfter(startAfterDoc);
+    ref.onSnapshot((snapshot) => {
+      const totalCount = snapshot.size;
+      const data = [
+        ...persistProducts,
+        ...snapshot.docs.map((doc) => {
+          return {
+            ...doc.data(),
+            documentID: doc.id,
+          };
+        }),
+      ];
 
-    ref
-      .get()
-      .then((snapshot) => {
-        const totalCount = snapshot.size;
-
-        const data = [
-          ...persistProducts,
-          ...snapshot.docs.map((doc) => {
-            return {
-              ...doc.data(),
-              documentID: doc.id,
-            };
-          }),
-        ];
-
-        resolve({
-          data,
-          queryDoc: snapshot.docs[totalCount - 1],
-          isLastPage: totalCount < pageSize,
-        });
-      })
-      .catch((err) => {
-        reject(err);
+      resolve({
+        data,
+        queryDoc: snapshot.docs[totalCount - 1],
+        isLastPage: totalCount < pageSize,
       });
+    });
   });
 };
 
