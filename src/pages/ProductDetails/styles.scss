@@ -1,12 +1,13 @@
 .pro-detail-container {
   padding: 0;
-  height: calc(100vh - 60px);
+  height: auto;
   background-color: white;
   .pro-name {
     font-size: 1.2rem;
   }
   .pro-desc {
     font-size: 1rem;
+    margin: 0 20px;
   }
   .carousel-container {
     width: 50%;
@@ -17,6 +18,15 @@
     float: left;
     width: 50%;
   }
+  img {
+    object-fit: contain !important;
+    // position: relative !important;
+  }
+
+  .carousel .thumb {
+    cursor: pointer !important;
+    height: 80px;
+  }
 }
 
 @media screen and (max-width: 480px) {
@@ -25,7 +35,7 @@
       width: 100% !important;
     }
     .pro-info-container {
-      padding: 10px;
+      padding: 5px;
       width: 100%;
     }
   }

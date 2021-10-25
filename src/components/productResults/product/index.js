@@ -22,12 +22,12 @@ const Product = ({
   return (
     <div>
       <ProductCard>
-        <Link
+        <a
           style={{ color: "#444444", textDecoration: "none" }}
-          to={`/products/${documentID}`}
+          href={`/products/${documentID}`}
         >
           <ProductImg src={productImages[0].url} alt={productName} />
-        </Link>
+        </a>
         <ProductInfo>
           <ProductName>
             {productName.substring(0, 20)}
